@@ -1,4 +1,6 @@
 import argparse
+
+from numpy.f2py.crackfortran import previous_context
 from playwright.async_api import async_playwright
 from playwright.sync_api import sync_playwright
 import asyncio
@@ -50,9 +52,12 @@ def main():
         timeout = 2 * 60  # 초 단위로 설정
         start_time = time.time()  # 현재 시간을 기록
 
+        previous_list_size = 0
         while True:
             page.mouse.wheel(0, 5000)
             page.wait_for_timeout(1500)
+
+            # add list
 
             # if found last text break
             text_cont = page.is_visible(f"//span[normalize-space(text())='{last_item_text}']")
@@ -81,18 +86,5 @@ def main():
 
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("-s", "--search", type=str)
-    # parser.add_argument("-t", "--total", type=int)
-    # args = parser.parse_args()
-
-    # if args.search:
-    #     search_for = args.search
-    # else:
-    #     search_for = "turkish stores in toronto Canada"
-    # if args.total:
-    #     total = args.total
-    # else:
-    #     total = 1
 
     main()
