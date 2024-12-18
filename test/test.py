@@ -61,7 +61,7 @@ def main():
 
             # 리스트가 더 발견되면 timeout 초기화
 
-            # 타임아웃 확인
+            # 타임아웃 확인 - 무한 로딩인 경우가 많음
             elapsed_time = time.time() - start_time  # 경과 시간 계산
             if elapsed_time > timeout:
                 print("리스트 로딩 타임아웃 경과")
