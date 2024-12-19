@@ -5,19 +5,21 @@ from numpy.f2py.crackfortran import previous_context
 from playwright.sync_api import sync_playwright
 import asyncio
 import time
+import configparser
 
-chromium_path = "C:\\Users\\kimyk\\Downloads\\chrome-win\\chrome-win\\chrome.exe"
+config = configparser.ConfigParser()
+# 'utf-8' 인코딩으로 파일 읽기
+with open('../config/config.ini', encoding='utf-8') as config_file:
+    config.read_file(config_file)
 
+# read section
+path_props = config['PATH']
+keyword_props = config['KEYWORD']
+xpath_props = config['XPATH']
 
-def extract_data(xpath, data_list, page):
-    if page.locator(xpath).count() > 0:
-        data = page.locator(xpath).inner_text()
-    else:
-        data = ""
-    data_list.append(data)
+chromium_path = path_props['chromium_path']
 
-
-# Playwright 시작
+# scrape 시작
 def main():
     with sync_playwright() as p:
         # 브라우저(Chromium) 열기
@@ -34,8 +36,8 @@ def main():
         page.wait_for_timeout(1000)
         
         # FIXME 
-        # search_keyword = "수리산역 음식점"
-        search_keyword = "Turkish Restaurants in Toronto Canada"
+        search_keyword = "호계동 헬스"
+        # search_keyword = "Turkish Restaurants in Toronto Canada"
         
         page.locator('//input[@id="searchboxinput"]').fill(search_keyword.strip())
         page.keyboard.press("Enter")
@@ -45,7 +47,7 @@ def main():
         page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
 
         # last keyword
-        last_item_text = '마지막 항목입니다.'
+        last_item_text = keyword_props['last_item_text']
 
         timeout = 60  # 초 단위로 설정
         start_time = time.time()  # 현재 시간을 기록
@@ -92,7 +94,23 @@ def main():
         for listing in total_listings:
             listing.click()
             page.wait_for_timeout(300)
+
             page.wait_for_selector('//div[@class="TIHn2 "]//h1[@class="DUwDvf lfPIob"]')
+
+            name_xpath = '//div[@class="TIHn2 "]//h1[@class="DUwDvf lfPIob"]'
+            address_xpath = '//button[@data-item-id="address"]//div[contains(@class, "fontBodyMedium")]'
+            website_xpath = '//a[@data-item-id="authority"]//div[contains(@class, "fontBodyMedium")]'
+            phone_number_xpath = '//button[contains(@data-item-id, "phone:tel:")]//div[contains(@class, "fontBodyMedium")]'
+            reviews_count_xpath = '//div[@class="TIHn2 "]//div[@class="fontBodyMedium dmRWX"]//div//span//span//span[@aria-label]'
+            reviews_average_xpath = '//div[@class="TIHn2 "]//div[@class="fontBodyMedium dmRWX"]//div//span[@aria-hidden]'
+
+            info1 = '//div[@class="LTs0Rc"][1]'  # store
+            info2 = '//div[@class="LTs0Rc"][2]'  # pickup
+            info3 = '//div[@class="LTs0Rc"][3]'  # delivery
+            opens_at_xpath = '//button[contains(@data-item-id, "oh")]//div[contains(@class, "fontBodyMedium")]'  # time
+            opens_at_xpath2 = '//div[@class="MkV9"]//span[@class="ZDu9vd"]//span[2]'
+            place_type_xpath = '//div[@class="LBgpqf"]//button[@class="DkEaL "]'  # type of place
+            intro_xpath = '//div[@class="WeS02d fontBodyMedium"]//div[@class="PYvSYb "]'  # ?
 
 
 
