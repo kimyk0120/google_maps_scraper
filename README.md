@@ -1,4 +1,4 @@
-Google Maps Scraper API  (ING...)
+Google Maps Scraper  (ING...)
 =======================
 This is a simple api that scrapes Google Maps. 
 It uses Playwright to scrape the data from Google Maps.
