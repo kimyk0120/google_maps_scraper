@@ -3,8 +3,7 @@ import configparser
 import time
 
 from playwright.sync_api import sync_playwright
-
-import utils.string_utils
+from utils import extract_utils, string_utils
 
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
@@ -90,55 +89,156 @@ def main(search_keyword: str) -> list:
         for listing in total_listings:
 
             listing.click()
-            page.wait_for_timeout(300)
+            page.wait_for_timeout(1500)
 
-            page.wait_for_selector(xpath_props['name_xpath'])
+            try:
+                page.wait_for_selector(xpath_props['name_xpath'], timeout=60000, state='attached')
+                print("store page loaded")
+            except Exception as e:
+                print(e)
+                print("store page not loaded")
+                continue
 
             # name
-            if page.locator(xpath_props['name_xpath']).count() > 0:
-                name = page.locator(xpath_props['name_xpath']).inner_text()
-            else:
-                continue  # name은 없으면 continue..
+            try:
+                if page.locator(xpath_props['name_xpath']).count() > 0:
+                    name = page.locator(xpath_props['name_xpath']).inner_text()
+                else:
+                    continue  # name은 없으면 continue..
+            except Exception as e:
+                print(e)
+                continue
 
             # review count
-            if page.locator(xpath_props['reviews_count_xpath']).count() > 0:
-                temp = page.locator(xpath_props['reviews_count_xpath']).inner_text()
-                temp = temp.replace('(', '').replace(')', '').replace(',', '')
-                review_count = int(temp)
-            else:
+            try:
+                if page.locator(xpath_props['reviews_count_xpath']).count() > 0:
+                    temp = page.locator(xpath_props['reviews_count_xpath']).inner_text()
+                    temp = temp.replace('(', '').replace(')', '').replace(',', '')
+                    review_count = int(temp)
+                else:
+                    review_count = None
+            except Exception as e:
+                print(e)
                 review_count = None
 
             # review_average
-            if page.locator(xpath_props['reviews_average_xpath']).count() > 0:
-                temp = page.locator(xpath_props['reviews_average_xpath']).inner_text()
-                temp = temp.replace(' ', '').replace(',', '.')
-                review_average = float(temp)
-            else:
+            try:
+                if page.locator(xpath_props['reviews_average_xpath']).count() > 0:
+                    temp = page.locator(xpath_props['reviews_average_xpath']).inner_text()
+                    temp = temp.replace(' ', '').replace(',', '.')
+                    review_average = float(temp)
+                else:
+                    review_average = None
+            except Exception as e:
+                print(e)
                 review_average = None
 
             # infos
             infos = []
-            if page.locator(xpath_props['infos']).count() > 0:
-                infos_els = page.locator(xpath_props['infos']).all()
-                for info in infos_els:
-                    temp = info.inner_text()
-                    cleaned_temp = utils.string_utils.remove_special_chars(temp)
-                    cleaned_temp = utils.string_utils.remove_multi_space_chars(cleaned_temp)
-                    infos.append(cleaned_temp)
+            try:
+                if page.locator(xpath_props['infos_xpath']).count() > 0:
+                    infos_els = page.locator(xpath_props['infos_xpath']).all()
+                    for info in infos_els:
+                        temp = info.inner_text()
+                        cleaned_temp = string_utils.remove_special_chars(temp)
+                        cleaned_temp = string_utils.remove_multi_space_chars(cleaned_temp)
+                        infos.append(cleaned_temp)
+            except Exception as e:
+                print(e)
 
 
+            # opens_at
+            try:
+                if page.locator(xpath_props['opens_at_xpath']).count() > 0:
+                    opens = page.locator(xpath_props['opens_at_xpath']).inner_text()
+                    opens = opens.split('⋅')
+
+                    if len(opens) != 1:
+                        opens = opens[1]
+
+                    else:
+                        opens = page.locator(xpath_props['opens_at_xpath']).inner_text()
+                        # print(opens)
+                    opens = opens.replace("\u202f", "")
+                    opens_at = opens.strip()
+                else:
+                    opens_at = ""
+
+                if page.locator(xpath_props['opens_at_xpath2']).count() > 0:
+
+                    try:
+                        opens = page.locator(xpath_props['opens_at_xpath2']).inner_text()
+                        opens = opens.split('⋅')
+                        opens = opens[1]
+                        opens = opens.replace("\u202f", "")
+                        opens_at = opens.strip()
+                    except Exception as e:
+                        opens_at = None
+            except Exception as e:
+                print(e)
+                opens_at = None
+
+            # address
+            try:
+                address = extract_utils.extract_data(xpath_props['address_xpath'], page)
+            except Exception as e:
+                print(e)
+                address = None
+
+            # website
+            try:
+                website = extract_utils.extract_data(xpath_props['website_xpath'], page)
+            except Exception as e:
+                print(e)
+                website = None
+
+            # phone_number
+            try:
+                phone = extract_utils.extract_data(xpath_props['phone_number_xpath'], page)
+            except Exception as e:
+                print(e)
+                phone = None
+
+            # place_type_xpath
+            try:
+                place_type = extract_utils.extract_data(xpath_props['place_type_xpath'], page)
+            except Exception as e:
+                print(e)
+                place_type = None
+
+            parse_result = {
+                'name': name,
+                'review_count': review_count,
+                'review_average': review_average,
+                'infos': infos,
+                'opens_at': opens_at,
+                'address': address,
+                'website': website,
+                'phone': phone,
+                'place_type': place_type,
+            }
+
+            data_results.append(parse_result)
+            print("parse_result: ", parse_result)
+
+            try:
+                page.locator(xpath_props['close_btn_xpath']).click()
+            except Exception as e:
+                print(e)
+                continue
 
 
-
-        print("end main")
+        print("end processing data")
 
         context.close()
         browser.close()
         return data_results
 
 
+
+
 if __name__ == "__main__":
-    search_keywords: list[str] = ["호계동 헬스", "Turkish Restaurants in Toronto Canada"]
+    search_keywords: list[str] = ["수리산역", "호계동 헬스", "Turkish Restaurants in Toronto Canada"]
 
     data_results = main(search_keywords[1])
 
