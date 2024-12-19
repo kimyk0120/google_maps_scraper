@@ -1,16 +1,14 @@
-import argparse
-
-from numpy.f2py.crackfortran import previous_context
 # from playwright.async_api import async_playwright
-from playwright.sync_api import sync_playwright
-import asyncio
-import time
 import configparser
+import time
+
+from playwright.sync_api import sync_playwright
+
+import utils.string_utils
 
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
-with open('../config/config.ini', encoding='utf-8') as config_file:
-    config.read_file(config_file)
+config.read('../config/config.ini', encoding='utf-8')
 
 # read section
 path_props = config['PATH']
@@ -19,8 +17,9 @@ xpath_props = config['XPATH']
 
 chromium_path = path_props['chromium_path']
 
+
 # scrape 시작
-def main():
+def main(search_keyword: str) -> list:
     with sync_playwright() as p:
         # 브라우저(Chromium) 열기
         # browser = p.chromium.launch(headless=False, executable_path=chromium_path, args=["--start-maximized"])
@@ -34,11 +33,7 @@ def main():
         # page.goto('https://www.google.com/maps/@32.9817464,70.1930781,3.67z?', timeout=60000)
         page.goto('https://www.google.com/maps/', timeout=60000)
         page.wait_for_timeout(1000)
-        
-        # FIXME 
-        search_keyword = "호계동 헬스"
-        # search_keyword = "Turkish Restaurants in Toronto Canada"
-        
+
         page.locator('//input[@id="searchboxinput"]').fill(search_keyword.strip())
         page.keyboard.press("Enter")
 
@@ -63,7 +58,8 @@ def main():
 
             # 새로운 항목이 있을 경우만 처리
             if list_size > previous_list_size:
-                new_listings = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').all()[previous_list_size:list_size]
+                new_listings = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').all()[
+                               previous_list_size:list_size]
                 new_listings = [listing.locator("xpath=..") for listing in new_listings]
 
                 # 누적 리스트에 추가
@@ -77,11 +73,10 @@ def main():
                 # 이전 리스트 크기 업데이트
                 previous_list_size = list_size
 
-
             # if found last text break
-            text_cont = page.is_visible(f"//span[normalize-space(text())='{last_item_text}']")
-            if text_cont:
-                break
+            if page.locator(f"//span[normalize-space(text())='{last_item_text}']").count() > 0:
+                if page.is_visible(f"//span[normalize-space(text())='{last_item_text}']"):
+                    break
 
             # 타임아웃 확인 - 무한 로딩인 경우가 많음
             elapsed_time = time.time() - start_time  # 경과 시간 계산
@@ -91,26 +86,45 @@ def main():
         # .end while
 
         # list loop
+        data_results = []
         for listing in total_listings:
+
             listing.click()
             page.wait_for_timeout(300)
 
-            page.wait_for_selector('//div[@class="TIHn2 "]//h1[@class="DUwDvf lfPIob"]')
+            page.wait_for_selector(xpath_props['name_xpath'])
 
-            name_xpath = '//div[@class="TIHn2 "]//h1[@class="DUwDvf lfPIob"]'
-            address_xpath = '//button[@data-item-id="address"]//div[contains(@class, "fontBodyMedium")]'
-            website_xpath = '//a[@data-item-id="authority"]//div[contains(@class, "fontBodyMedium")]'
-            phone_number_xpath = '//button[contains(@data-item-id, "phone:tel:")]//div[contains(@class, "fontBodyMedium")]'
-            reviews_count_xpath = '//div[@class="TIHn2 "]//div[@class="fontBodyMedium dmRWX"]//div//span//span//span[@aria-label]'
-            reviews_average_xpath = '//div[@class="TIHn2 "]//div[@class="fontBodyMedium dmRWX"]//div//span[@aria-hidden]'
+            # name
+            if page.locator(xpath_props['name_xpath']).count() > 0:
+                name = page.locator(xpath_props['name_xpath']).inner_text()
+            else:
+                continue  # name은 없으면 continue..
 
-            info1 = '//div[@class="LTs0Rc"][1]'  # store
-            info2 = '//div[@class="LTs0Rc"][2]'  # pickup
-            info3 = '//div[@class="LTs0Rc"][3]'  # delivery
-            opens_at_xpath = '//button[contains(@data-item-id, "oh")]//div[contains(@class, "fontBodyMedium")]'  # time
-            opens_at_xpath2 = '//div[@class="MkV9"]//span[@class="ZDu9vd"]//span[2]'
-            place_type_xpath = '//div[@class="LBgpqf"]//button[@class="DkEaL "]'  # type of place
-            intro_xpath = '//div[@class="WeS02d fontBodyMedium"]//div[@class="PYvSYb "]'  # ?
+            # review count
+            if page.locator(xpath_props['reviews_count_xpath']).count() > 0:
+                temp = page.locator(xpath_props['reviews_count_xpath']).inner_text()
+                temp = temp.replace('(', '').replace(')', '').replace(',', '')
+                review_count = int(temp)
+            else:
+                review_count = None
+
+            # review_average
+            if page.locator(xpath_props['reviews_average_xpath']).count() > 0:
+                temp = page.locator(xpath_props['reviews_average_xpath']).inner_text()
+                temp = temp.replace(' ', '').replace(',', '.')
+                review_average = float(temp)
+            else:
+                review_average = None
+
+            # infos
+            infos = []
+            if page.locator(xpath_props['infos']).count() > 0:
+                infos_els = page.locator(xpath_props['infos']).all()
+                for info in infos_els:
+                    temp = info.inner_text()
+                    cleaned_temp = utils.string_utils.remove_special_chars(temp)
+                    cleaned_temp = utils.string_utils.remove_multi_space_chars(cleaned_temp)
+                    infos.append(cleaned_temp)
 
 
 
@@ -120,8 +134,11 @@ def main():
 
         context.close()
         browser.close()
+        return data_results
 
 
 if __name__ == "__main__":
+    search_keywords: list[str] = ["호계동 헬스", "Turkish Restaurants in Toronto Canada"]
 
-    main()
+    data_results = main(search_keywords[1])
+
