@@ -13,6 +13,9 @@ config.read('../config/config.ini', encoding='utf-8')
 path_props = config['PATH']
 keyword_props = config['KEYWORD']
 xpath_props = config['XPATH']
+etc_props = config['ETC']
+
+
 
 chromium_path = path_props['chromium_path']
 
@@ -43,7 +46,7 @@ def main(search_keyword: str) -> list:
         # last keyword
         last_item_text = keyword_props['last_item_text']
 
-        timeout = 60  # 초 단위로 설정
+        timeout = int(etc_props['timout_sec'])  # 초 단위로 설정
         start_time = time.time()  # 현재 시간을 기록
 
         total_listings = []
@@ -89,7 +92,7 @@ def main(search_keyword: str) -> list:
         for listing in total_listings:
 
             listing.click()
-            page.wait_for_timeout(1500)
+            page.wait_for_timeout(2000)
 
             try:
                 page.wait_for_selector(xpath_props['name_xpath'], timeout=60000, state='attached')
@@ -98,6 +101,8 @@ def main(search_keyword: str) -> list:
                 print(e)
                 print("store page not loaded")
                 continue
+
+            page.wait_for_timeout(3000)
 
             # name
             try:
@@ -221,24 +226,17 @@ def main(search_keyword: str) -> list:
             data_results.append(parse_result)
             print("parse_result: ", parse_result)
 
-            try:
-                page.locator(xpath_props['close_btn_xpath']).click()
-            except Exception as e:
-                print(e)
-                continue
-
-
         print("end processing data")
 
         context.close()
         browser.close()
-        return data_results
-
-
+        return extract_utils.remove_duplicate_list(data_results)
 
 
 if __name__ == "__main__":
-    search_keywords: list[str] = ["수리산역", "호계동 헬스", "Turkish Restaurants in Toronto Canada"]
+    search_keywords: list[str] = ["대야미역", "호계동 헬스", "Turkish Restaurants in Toronto Canada"]
 
-    data_results = main(search_keywords[1])
+    data_results = main(search_keywords[0])
+
+    print("end process")
 
