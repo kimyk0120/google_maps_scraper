@@ -16,8 +16,6 @@ keyword_props = config['KEYWORD']
 xpath_props = config['XPATH']
 etc_props = config['ETC']
 
-
-
 chromium_path = path_props['chromium_path']
 
 
@@ -25,8 +23,8 @@ chromium_path = path_props['chromium_path']
 def main(search_keyword: str) -> list:
     with sync_playwright() as p:
         # 브라우저(Chromium) 열기
-        # browser = p.chromium.launch(headless=False, executable_path=chromium_path, args=["--start-maximized"])
-        browser = p.chromium.launch(headless=False, executable_path=chromium_path)
+        browser = p.chromium.launch(headless=False, executable_path=chromium_path, args=["--start-maximized"])
+        # browser = p.chromium.launch(headless=False, executable_path=chromium_path)
         # create a new incognito browser context.
         context = browser.new_context(no_viewport=True)
         # create a new page in a pristine context.
@@ -152,7 +150,6 @@ def main(search_keyword: str) -> list:
             except Exception as e:
                 print(e)
 
-
             # opens_at
             try:
                 if page.locator(xpath_props['opens_at_xpath']).count() > 0:
@@ -212,6 +209,59 @@ def main(search_keyword: str) -> list:
                 print(e)
                 place_type = None
 
+            # TODO review info
+            if review_count is not None:
+                # page.reload()
+                page.locator(xpath_props['review_btn_xpath']).click()
+
+                page.wait_for_selector(xpath_props['data_review_part_xpath'])
+
+                total_review_listings = []
+                previous_list_size = 0
+                while True:
+                    page.mouse.wheel(0, 5000)
+                    page.wait_for_timeout(1500)
+
+                    list_size = page.locator(xpath_props['data_review_part_xpath']).count()
+
+                    #
+                    # # 새로운 항목이 있을 경우만 처리
+                    # if list_size > previous_list_size:
+                    #     new_listings = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').all()[
+                    #                    previous_list_size:list_size]
+                    #     new_listings = [listing.locator("xpath=..") for listing in new_listings]
+                    #
+                    #     # 누적 리스트에 추가
+                    #     total_listings.extend(new_listings)
+                    #     print(f"새로운 항목 발견: {list_size - previous_list_size}개 추가")
+                    #     print(f"Total Found: {len(total_listings)}")  # 누적된 리스트 개수 출력
+                    #
+                    #     # 타임아웃 초기화
+                    #     start_time = time.time()
+                    #
+                    #     # 이전 리스트 크기 업데이트
+                    #     previous_list_size = list_size
+                    #
+                    # # if found last text break
+                    # if page.locator(f"//span[normalize-space(text())='{last_item_text}']").count() > 0:
+                    #     if page.is_visible(f"//span[normalize-space(text())='{last_item_text}']"):
+                    #         break
+                    #
+                    # # 타임아웃 확인 - 무한 로딩인 경우가 많음
+                    # elapsed_time = time.time() - start_time  # 경과 시간 계산
+                    # if elapsed_time > timeout:
+                    #     print("리스트 로딩 타임아웃 경과")
+                    #     break
+
+
+                    if len(total_review_listings) >= review_count:
+                        break
+
+
+
+
+
+
             parse_result = {
                 'name': name,
                 'review_count': review_count,
@@ -241,4 +291,3 @@ if __name__ == "__main__":
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)  #
 
     print("end process")
-
