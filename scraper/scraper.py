@@ -209,7 +209,9 @@ def main(search_keyword: str) -> list:
                 print(e)
                 place_type = None
 
+
             # TODO review info
+            review_results = []
             if review_count is not None:
                 # page.reload()
                 page.locator(xpath_props['review_btn_xpath']).click()
@@ -256,10 +258,6 @@ def main(search_keyword: str) -> list:
 
                     if len(total_review_listings) >= review_count:
                         break
-
-
-
-
 
 
             parse_result = {
