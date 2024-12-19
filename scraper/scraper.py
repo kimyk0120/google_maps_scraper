@@ -3,7 +3,8 @@ import configparser
 import time
 
 from playwright.sync_api import sync_playwright
-from utils import extract_utils, string_utils
+from utils import data_utils, string_utils
+import json
 
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
@@ -185,28 +186,28 @@ def main(search_keyword: str) -> list:
 
             # address
             try:
-                address = extract_utils.extract_data(xpath_props['address_xpath'], page)
+                address = data_utils.extract_data(xpath_props['address_xpath'], page)
             except Exception as e:
                 print(e)
                 address = None
 
             # website
             try:
-                website = extract_utils.extract_data(xpath_props['website_xpath'], page)
+                website = data_utils.extract_data(xpath_props['website_xpath'], page)
             except Exception as e:
                 print(e)
                 website = None
 
             # phone_number
             try:
-                phone = extract_utils.extract_data(xpath_props['phone_number_xpath'], page)
+                phone = data_utils.extract_data(xpath_props['phone_number_xpath'], page)
             except Exception as e:
                 print(e)
                 phone = None
 
-            # place_type_xpath
+            # place_type
             try:
-                place_type = extract_utils.extract_data(xpath_props['place_type_xpath'], page)
+                place_type = data_utils.extract_data(xpath_props['place_type_xpath'], page)
             except Exception as e:
                 print(e)
                 place_type = None
@@ -230,13 +231,14 @@ def main(search_keyword: str) -> list:
 
         context.close()
         browser.close()
-        return extract_utils.remove_duplicate_list(data_results)
+        return data_utils.remove_duplicate_list(data_results)
 
 
 if __name__ == "__main__":
     search_keywords: list[str] = ["대야미역", "호계동 헬스", "Turkish Restaurants in Toronto Canada"]
 
     data_results = main(search_keywords[0])
+    json_data = json.dumps(data_results, ensure_ascii=False, indent=4)  #
 
     print("end process")
 
