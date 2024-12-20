@@ -1,26 +1,32 @@
+
+[//]: # ([![forthebadge]&#40;https://forthebadge.com/images/badges/open-source.svg&#41;]&#40;https://forthebadge.com&#41;)
+
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
+[![pythonbadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
+
 Google Maps Scraper  
 =======================
-This is a Google Maps scraper projet. 
+This is a Google Maps scraper.
 It uses Playwright library to web scraping and data extraction from Google Maps.
 
 This scraper will extract the following information list from the Google Maps:
 
-- name: Store name (e.g., "Store Name")
-- review_count: Total number of reviews (e.g., 756)
-- review_average: Average review rating (e.g., 4.2)
+- name: Store name 
+- review_count: Total number of reviews 
+- review_average: Average review rating 
 - infos: Store service information (e.g., ["Dine-in", "Takeout", "Delivery Service"])
 - opens_at: Store opening time (e.g., "Opens at 12:00 PM")
-- address: Store address (e.g., "25 The West Mall, Etobicoke, ON M9C 1B8 Canada")
-- website: Store website (e.g., "sample.com")
-- phone: Store phone number (e.g., "+1 416-641-7327")
+- address: Store address 
+- website: Store website 
+- phone: Store phone number 
 - place_type: Place type (e.g., "Restaurant")
 - reviews: List of detailed review information
-- review_name: Reviewer name (e.g., "reviewer name")
-- review_info: Number of reviews and photos (e.g., "19 reviews · 12 photos")
-- review_content: Review content (e.g., "So good~~")
-- review_rate: Review rating (e.g., 5)
-- review_image_urls: List of review image URLs (e.g., ["https://sample.com/p/-k-no", "https://sample.com/p/-k-no2"])
-- review_at: Review posted time (e.g., "1 week ago")
+  - review_name: Reviewer name
+  - review_info: Number of reviews and photos
+  - review_content: Review content
+  - review_rate: Review rating 
+  - review_image_urls: List of review image URLs 
+  - review_at: Review posted time (e.g., "1 week ago")
 
 ```json
 [
@@ -46,20 +52,16 @@ This scraper will extract the following information list from the Google Maps:
                 "review_rate": 5,
                 "review_image_urls": [
                     "https://sample.com/p/-k-no",
-                    "https://sample.com/p/-k-no2",
+                    "https://sample.com/p/-k-no2"
                 ],
                 "review_at": "1주 전"
             },
-        ...
 ```
 
 ## Prerequisite
 - python >= 3.10 
 - chromium
 
-## Features
-- Data Scraping: Scrap data from Google Maps to extract information such as business names, addresses, websites, contact information, and reviews. The data structure is output as a json file, and the json structure is as above.
-- You can adjust the number of lists, set proxy settings, or change the xpath by setting config.ini.
 
 ## Installation
 
@@ -96,3 +98,10 @@ If you need to change the output path, do as follows.
      python main.py "search term" --output "ouput path"
   ```
 
+---
+## Contact
+
+For any feedback or queries, please reach out to me at [kimyk0120@gmail.com](kimyk0120@gmail.com).
+
+
+[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?slug=zubdata&button_colour=FFDD00&font_colour=000000&font_family=Lato&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/kimyk0120)
