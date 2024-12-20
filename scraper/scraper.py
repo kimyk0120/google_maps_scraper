@@ -1,7 +1,9 @@
 # from playwright.async_api import async_playwright
 import configparser
+import os
 import re
 import time
+from datetime import datetime
 
 from playwright.sync_api import sync_playwright
 from utils import data_utils, string_utils
@@ -9,7 +11,9 @@ import json
 
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
-config.read('../config/config.ini', encoding='utf-8')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(current_dir, '../config/config.ini')
+config.read(config_path, encoding='utf-8')
 
 # read section
 path_props = config['PATH']
@@ -284,7 +288,8 @@ def main(search_keyword: str, headlsee=True) -> list:
 
                     # 리뷰 내용이 없을 수 있음
                     if review_raw.locator(".jJc9Ad .GHT2ce .MyEned span.wiI7pd").count() > 0:
-                        review_content = review_raw.locator(".jJc9Ad .GHT2ce .MyEned span.wiI7pd").inner_text().strip().replace('\n', ' ')
+                        review_content = review_raw.locator(
+                            ".jJc9Ad .GHT2ce .MyEned span.wiI7pd").inner_text().strip().replace('\n', ' ')
                     else:
                         review_content = None
 
@@ -323,7 +328,8 @@ def main(search_keyword: str, headlsee=True) -> list:
                 'website': website,
                 'phone': phone,
                 'place_type': place_type,
-                'reviews': review_results
+                'reviews': review_results,
+                'scraped_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
 
             data_results.append(parse_result)
