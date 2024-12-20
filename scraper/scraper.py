@@ -20,16 +20,28 @@ path_props = config['PATH']
 keyword_props = config['KEYWORD']
 xpath_props = config['XPATH']
 conf_props = config['CONFIG']
+proxy_props = config['PROXY']
 
 chromium_path = path_props['chromium_path']
-
 
 # scrape 시작
 def main(search_keyword: str, headlsee=True) -> list:
     with sync_playwright() as p:
-        # 브라우저(Chromium) 열기
-        browser = p.chromium.launch(headless=headlsee, executable_path=chromium_path, args=["--start-maximized"])
-        # browser = p.chromium.launch(headless=False, executable_path=chromium_path)
+
+        # launch 옵션 설정
+        launch_options = {
+            "headless": headlsee,
+            "executable_path": chromium_path,
+            "args": ["--start-maximized"]
+        }
+
+        # proxy 설정 추가
+        if proxy_props['proxy_server']:  # proxy_server가 비어 있지 않다면
+            launch_options["proxy"] = {"server": proxy_props['proxy_server']}
+
+        # 브라우저 열기
+        browser = p.chromium.launch(**launch_options)
+
         # create a new incognito browser context.
         context = browser.new_context(no_viewport=True)
         # create a new page in a pristine context.
