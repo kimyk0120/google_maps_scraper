@@ -99,12 +99,11 @@ If you need to change the output path, do as follows.
      python main.py "search term" --output "ouput path"
   ```
 
----
 
 ## Update
 - 2024.12.20
 
----
+
 ## Contact
 
 For any feedback or queries, please reach out to me at [kimyk0120@gmail.com](kimyk0120@gmail.com).
