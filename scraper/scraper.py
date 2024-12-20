@@ -213,69 +213,47 @@ def main(search_keyword: str, headlsee=True) -> list:
             # TODO review info
             # get review list
             review_results = []
-            if review_count is not None:
-                # page.reload()
-                page.locator(xpath_props['review_btn_xpath']).click()
+            if review_count:
+                try:
+                    # page.reload()
+                    page.locator(xpath_props['review_btn_xpath']).click()
+                    page.wait_for_selector(xpath_props['data_review_part_xpath'])
+                    
+                    # 초기화
+                    total_review_listings = []
+                    previous_list_size = 0
+                    timeout = int(conf_props['timout_sec'])  # 초 단위로 설정
+                    start_time = time.time()
+    
+                    print("리뷰 스크롤 시작...")
+                    # scroll to bottom for visible all reviews
+                    while True:
+                        page.mouse.wheel(0, 5000)
+                        page.wait_for_timeout(1500)
 
-                page.wait_for_selector(xpath_props['data_review_part_xpath'])
+                        current_list_size = page.locator(xpath_props['data_review_part_xpath']).count()
+                        print(f"스크롤 중: 불러온 리뷰 수: {current_list_size}/{review_count}")
+    
+                        # 새로운 리뷰를 불러온 경우 타임아웃 초기화
+                        if current_list_size > previous_list_size:
+                            start_time = time.time()
+                            previous_list_size = current_list_size
+                            print("새로운 리뷰 발견 - 타임아웃 초기화")
+    
+                        # 모든 리뷰를 불러왔거나, 리뷰 제한 수에 도달하면 종료
+                        if current_list_size >= review_count or current_list_size >= int(
+                                conf_props['review_limit_cnt']):
+                            print("모든 리뷰 로드 완료")
+                            break
+    
+                        # 타임아웃 처리 (지정된 시간 동안 새로운 리뷰가 없으면 종료)
+                        if time.time() - start_time > timeout:
+                            print(f"리뷰 로드가 {timeout}초 이내 완료되지 않음 - 타임아웃 발생")
+                            break
+                except Exception as e:
+                    print("리뷰 데이터 가져오는 중 오류 발생")
+                    print(e)
 
-                total_review_listings = []
-                previous_list_size = 0
-
-                timeout = int(conf_props['timout_sec'])  # 초 단위로 설정
-                start_time = time.time()
-
-                # scroll to bottom for visible all reviews
-                while True:
-                    page.mouse.wheel(0, 5000)
-                    page.wait_for_timeout(1500)
-
-                    get_list_size = page.locator(xpath_props['data_review_part_xpath']).count()
-                    print('review list_size : ', get_list_size, ' of ', review_count)
-
-                    # time out 초기화
-                    # if get_list_size > previous_list_size:
-
-
-
-                    # list size 가 review count와 같다면 스크롤리 전부 내려간 것으로 판단
-                    if get_list_size >= review_count:
-                        print("list_size >= review_count")
-                        break
-
-                    # 로딩 타임아웃 break
-                    # elapsed_time = time.time() - start_time  # 경과 시간 계산
-                    # if elapsed_time > timeout:
-                    #     print("리뷰 리스트 로딩 타임아웃 경과")
-                    #     break
-
-                    # 새로운 항목이 있을 경우만 처리
-                    # if list_size > previous_list_size:
-                    #     new_listings = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').all()[
-                    #                    previous_list_size:list_size]
-                    #     new_listings = [listing.locator("xpath=..") for listing in new_listings]
-                    #
-                    #     # 누적 리스트에 추가
-                    #     total_listings.extend(new_listings)
-                    #     print(f"새로운 항목 발견: {list_size - previous_list_size}개 추가")
-                    #     print(f"Total Found: {len(total_listings)}")  # 누적된 리스트 개수 출력
-                    #
-                    #     # 타임아웃 초기화
-                    #     start_time = time.time()
-                    #
-                    #     # 이전 리스트 크기 업데이트
-                    #     previous_list_size = list_size
-                    #
-                    # # if found last text break
-                    # if page.locator(f"//span[normalize-space(text())='{last_item_text}']").count() > 0:
-                    #     if page.is_visible(f"//span[normalize-space(text())='{last_item_text}']"):
-                    #         break
-                    #
-                    # # 타임아웃 확인 - 무한 로딩인 경우가 많음
-                    # elapsed_time = time.time() - start_time  # 경과 시간 계산
-                    # if elapsed_time > timeout:
-                    #     print("리스트 로딩 타임아웃 경과")
-                    #     break
 
             parse_result = {
                 'name': name,
