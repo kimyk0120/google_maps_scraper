@@ -56,6 +56,7 @@ This scraper will extract the following information list from the Google Maps:
                 ],
                 "review_at": "1주 전"
             },
+  ...
 ```
 
 ## Prerequisite
