@@ -1,5 +1,6 @@
 # from playwright.async_api import async_playwright
 import configparser
+import re
 import time
 
 from playwright.sync_api import sync_playwright
@@ -85,6 +86,13 @@ def main(search_keyword: str, headlsee=True) -> list:
             if elapsed_time > timeout:
                 print("리스트 로딩 타임아웃 경과")
                 break
+
+            # store limit cnt 넘었을때 break
+            if len(total_listings) >= int(conf_props['store_limit_cnt']):
+                print("store limit 달성")
+                total_listings = total_listings[:int(conf_props['store_limit_cnt'])]
+                break
+
         # .end while
 
         # list loop
@@ -108,6 +116,7 @@ def main(search_keyword: str, headlsee=True) -> list:
             try:
                 if page.locator(xpath_props['name_xpath']).count() > 0:
                     name = page.locator(xpath_props['name_xpath']).inner_text()
+                    print("store name : ", name)
                 else:
                     continue  # name은 없으면 continue..
             except Exception as e:
@@ -218,13 +227,13 @@ def main(search_keyword: str, headlsee=True) -> list:
                     # page.reload()
                     page.locator(xpath_props['review_btn_xpath']).click()
                     page.wait_for_selector(xpath_props['data_review_part_xpath'])
-                    
+
                     # 초기화
                     total_review_listings = []
                     previous_list_size = 0
                     timeout = int(conf_props['timout_sec'])  # 초 단위로 설정
                     start_time = time.time()
-    
+
                     print("리뷰 스크롤 시작...")
                     # scroll to bottom for visible all reviews
                     while True:
@@ -233,19 +242,28 @@ def main(search_keyword: str, headlsee=True) -> list:
 
                         current_list_size = page.locator(xpath_props['data_review_part_xpath']).count()
                         print(f"스크롤 중: 불러온 리뷰 수: {current_list_size}/{review_count}")
-    
+
+                        if current_list_size:
+                            new_review_list = page.locator(xpath_props['data_review_part_xpath']).all()[
+                                              previous_list_size:current_list_size]
+
+                            # 누적 리스트에 추가
+                            total_review_listings.extend(new_review_list)
+
                         # 새로운 리뷰를 불러온 경우 타임아웃 초기화
                         if current_list_size > previous_list_size:
                             start_time = time.time()
                             previous_list_size = current_list_size
                             print("새로운 리뷰 발견 - 타임아웃 초기화")
-    
+
                         # 모든 리뷰를 불러왔거나, 리뷰 제한 수에 도달하면 종료
                         if current_list_size >= review_count or current_list_size >= int(
                                 conf_props['review_limit_cnt']):
-                            print("모든 리뷰 로드 완료")
+                            print("모든 리뷰 or review limit 도달하여 로드 완료")
+                            total_review_listings = total_review_listings[:int(
+                                conf_props['review_limit_cnt'])]
                             break
-    
+
                         # 타임아웃 처리 (지정된 시간 동안 새로운 리뷰가 없으면 종료)
                         if time.time() - start_time > timeout:
                             print(f"리뷰 로드가 {timeout}초 이내 완료되지 않음 - 타임아웃 발생")
@@ -254,6 +272,46 @@ def main(search_keyword: str, headlsee=True) -> list:
                     print("리뷰 데이터 가져오는 중 오류 발생")
                     print(e)
 
+                for review_raw in total_review_listings:
+                    review_name = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.d4r55").inner_text().strip()
+                    print("review_name: ", review_name)
+
+                    # 리뷰어 정보 없을 수 있음
+                    if review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.RfnDt").count() > 0:
+                        review_info = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.RfnDt").inner_text().strip()
+                    else:
+                        review_info = None
+
+                    # 리뷰 내용이 없을 수 있음
+                    if review_raw.locator(".jJc9Ad .GHT2ce .MyEned span.wiI7pd").count() > 0:
+                        review_content = review_raw.locator(".jJc9Ad .GHT2ce .MyEned span.wiI7pd").inner_text().strip().replace('\n', ' ')
+                    else:
+                        review_content = None
+
+                    # 리뷰 별
+                    review_rate = review_raw.locator(".jJc9Ad .GHT2ce .kvMYJc span").count()
+
+                    # 리뷰 작성후 지난 시간
+                    review_at = review_raw.locator(".jJc9Ad .GHT2ce .rsqaWe").inner_text().strip()
+
+                    review_image_urls = []
+                    if review_raw.locator(".jJc9Ad .GHT2ce .KtCyie").count() > 0:
+                        url_img_buttons = review_raw.locator(".jJc9Ad .GHT2ce .KtCyie button").all()
+                        if url_img_buttons:
+                            for url_img in url_img_buttons:
+                                style_attribute = url_img.get_attribute("style")
+                                url_match = re.search(r'url\("?(.*?)"?\)', style_attribute)
+                                if url_match:
+                                    review_image_urls.append(url_match.group(1))
+
+                    review_results.append({
+                        "review_name": review_name,
+                        "review_info": review_info,
+                        "review_content": review_content,
+                        "review_rate": review_rate,
+                        "review_image_urls": review_image_urls,
+                        'review_at': review_at
+                    })
 
             parse_result = {
                 'name': name,
@@ -265,6 +323,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                 'website': website,
                 'phone': phone,
                 'place_type': place_type,
+                'reviews': review_results
             }
 
             data_results.append(parse_result)
