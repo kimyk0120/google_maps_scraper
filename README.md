@@ -6,6 +6,7 @@ It uses Playwright to scrape the data from Google Maps.
 
 - 리뷰 데이터 수집 프로세스 
   - 스크롤 로직 추가 필요
+  - 리뷰가 너무 많은 경우가 많아 리뷰 limit 필요함 
 - 무료 proxy 적용해보기 
 
 - Python

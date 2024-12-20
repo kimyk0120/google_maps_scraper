@@ -14,16 +14,16 @@ config.read('../config/config.ini', encoding='utf-8')
 path_props = config['PATH']
 keyword_props = config['KEYWORD']
 xpath_props = config['XPATH']
-etc_props = config['ETC']
+conf_props = config['CONFIG']
 
 chromium_path = path_props['chromium_path']
 
 
 # scrape 시작
-def main(search_keyword: str) -> list:
+def main(search_keyword: str, headlsee=True) -> list:
     with sync_playwright() as p:
         # 브라우저(Chromium) 열기
-        browser = p.chromium.launch(headless=False, executable_path=chromium_path, args=["--start-maximized"])
+        browser = p.chromium.launch(headless=headlsee, executable_path=chromium_path, args=["--start-maximized"])
         # browser = p.chromium.launch(headless=False, executable_path=chromium_path)
         # create a new incognito browser context.
         context = browser.new_context(no_viewport=True)
@@ -45,7 +45,7 @@ def main(search_keyword: str) -> list:
         # last keyword
         last_item_text = keyword_props['last_item_text']
 
-        timeout = int(etc_props['timout_sec'])  # 초 단위로 설정
+        timeout = int(conf_props['timout_sec'])  # 초 단위로 설정
         start_time = time.time()  # 현재 시간을 기록
 
         total_listings = []
@@ -70,6 +70,7 @@ def main(search_keyword: str) -> list:
 
                 # 타임아웃 초기화
                 start_time = time.time()
+                print("리스트 로딩 타입아웃 초기화")
 
                 # 이전 리스트 크기 업데이트
                 previous_list_size = list_size
@@ -209,8 +210,8 @@ def main(search_keyword: str) -> list:
                 print(e)
                 place_type = None
 
-
             # TODO review info
+            # get review list
             review_results = []
             if review_count is not None:
                 # page.reload()
@@ -220,14 +221,35 @@ def main(search_keyword: str) -> list:
 
                 total_review_listings = []
                 previous_list_size = 0
+
+                timeout = int(conf_props['timout_sec'])  # 초 단위로 설정
+                start_time = time.time()
+
+                # scroll to bottom for visible all reviews
                 while True:
                     page.mouse.wheel(0, 5000)
                     page.wait_for_timeout(1500)
 
-                    list_size = page.locator(xpath_props['data_review_part_xpath']).count()
+                    get_list_size = page.locator(xpath_props['data_review_part_xpath']).count()
+                    print('review list_size : ', get_list_size, ' of ', review_count)
 
-                    #
-                    # # 새로운 항목이 있을 경우만 처리
+                    # time out 초기화
+                    # if get_list_size > previous_list_size:
+
+
+
+                    # list size 가 review count와 같다면 스크롤리 전부 내려간 것으로 판단
+                    if get_list_size >= review_count:
+                        print("list_size >= review_count")
+                        break
+
+                    # 로딩 타임아웃 break
+                    # elapsed_time = time.time() - start_time  # 경과 시간 계산
+                    # if elapsed_time > timeout:
+                    #     print("리뷰 리스트 로딩 타임아웃 경과")
+                    #     break
+
+                    # 새로운 항목이 있을 경우만 처리
                     # if list_size > previous_list_size:
                     #     new_listings = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').all()[
                     #                    previous_list_size:list_size]
@@ -255,11 +277,6 @@ def main(search_keyword: str) -> list:
                     #     print("리스트 로딩 타임아웃 경과")
                     #     break
 
-
-                    if len(total_review_listings) >= review_count:
-                        break
-
-
             parse_result = {
                 'name': name,
                 'review_count': review_count,
@@ -285,7 +302,7 @@ def main(search_keyword: str) -> list:
 if __name__ == "__main__":
     search_keywords: list[str] = ["대야미역", "호계동 헬스", "Turkish Restaurants in Toronto Canada"]
 
-    data_results = main(search_keywords[0])
+    data_results = main(search_keywords[2], False)
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)  #
 
     print("end process")
