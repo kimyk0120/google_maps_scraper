@@ -81,8 +81,8 @@ This scraper will extract the following information list from the Google Maps:
 
 To use this script, follow these steps:
 
-### Set up Configuration
-You need to configure the necessary settings in the {project}/config/config.ini file.
+### 1. Set up Configuration
+- You need to configure the necessary settings in the {project}/config/config.ini file.
 - You must write the path to the chromium executable in "chromium_path".  
   - ```chromium_path = C:\Users\kimyk\Downloads\chrome-win\chrome-win\chrome.exe```
 - Set "timout_sec" appropriately to prevent infinite loading.
@@ -90,7 +90,7 @@ You need to configure the necessary settings in the {project}/config/config.ini 
 - Set the maximum number of reviews to scrape with the "review_limit_cnt" setting.
 - If you need proxy settings, put them in "proxy_server"
 
-### Run the script with Python:
+### 2. Run the script with Python:
   ```bash 
     python main.py "search term" 
   ```
