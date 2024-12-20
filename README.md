@@ -71,7 +71,7 @@ This scraper will extract the following information list from the Google Maps:
    ```bash
    git clone https://github.com/kimyk0120/google_maps_scraper
    ```
-2. Move to the project directory:
+2. Move to the project directory
    
 3. Install the required Python packages:
     ```bash
