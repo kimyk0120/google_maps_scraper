@@ -24,6 +24,7 @@ proxy_props = config['PROXY']
 
 chromium_path = path_props['chromium_path']
 
+
 # scrape 시작
 def main(search_keyword: str, headlsee=True) -> list:
     with sync_playwright() as p:
@@ -31,9 +32,13 @@ def main(search_keyword: str, headlsee=True) -> list:
         # launch 옵션 설정
         launch_options = {
             "headless": headlsee,
-            "executable_path": chromium_path,
             "args": ["--start-maximized"]
         }
+
+        # chromium_path가 있는 경우에만 launch_options에 추가
+        if chromium_path:
+            launch_options["executable_path"] = chromium_path
+
 
         # proxy 설정 추가
         if proxy_props['proxy_server']:  # proxy_server가 비어 있지 않다면
@@ -355,9 +360,16 @@ def main(search_keyword: str, headlsee=True) -> list:
 
 
 if __name__ == "__main__":
-    search_keywords: list[str] = ["대야미역", "호계동 헬스", "Turkish Restaurants in Toronto Canada"]
+    search_keywords: list[str] = ["대야미역", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ", "コインランドリー"]
 
-    data_results = main(search_keywords[2], False)
-    json_data = json.dumps(data_results, ensure_ascii=False, indent=4)  #
+    data_results = main(search_keywords[4], False)
+    json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
+    # 결과를 파일로 저장
+    try:
+        with open('../output/output.json', 'w', encoding='utf-8') as f:
+            f.write(json_data)
+
+    except Exception as e:
+        print(f"Error writing to file : {e}")
 
     print("end process")
