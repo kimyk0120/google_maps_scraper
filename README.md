@@ -85,6 +85,7 @@ To use this script, follow these steps:
 - You need to configure the necessary settings in the {project}/config/config.ini file.
 - You must write the path to the chromium executable in "chromium_path".  
   - ```chromium_path = C:\Users\kimyk\Downloads\chrome-win\chrome-win\chrome.exe```
+  - or `Leave `chromium_path` empty and run `playwright install``
 - Set "timout_sec" appropriately to prevent infinite loading.
 - Set the maximum number of businesses to scrape with the "store_limit_cnt" setting.
 - Set the maximum number of reviews to scrape with the "review_limit_cnt" setting.
