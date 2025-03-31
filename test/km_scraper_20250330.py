@@ -3,8 +3,8 @@ import configparser
 import os
 import time
 from datetime import datetime
-import pandas as pd
 
+import pandas as pd
 from playwright.sync_api import sync_playwright
 
 from utils import data_utils, string_utils
@@ -361,30 +361,49 @@ def main(search_keyword: str, headlsee=True) -> list:
 
 if __name__ == "__main__":
 
-    search_keywords: list[str] = ["대야미역 헬스", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ",
-                                  "コインランドリー"]
+    # search_keywords: list[str] = ["대야미역 헬스", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ",
+    #                               "北海道 コインランドリー"]
 
-    skw = search_keywords[1]
+    # 읽어올 엑셀 파일 경로
+    src_file_path = "cw_kr.xlsx"
+    # 엑셀 파일 불러오기
+    df = pd.read_excel(src_file_path)
 
-    data_results = main(skw, False)
+    # 데이터 확인
+    print(df.head())
 
-    excel_data = []
+    keyword_list = df.iloc[:, 5].tolist()
 
-    for result in data_results:
-        name, address = result['name'], result['address']
-        excel_data.append({"Keyword": skw, "Name": name, "Address": address})
+    print(keyword_list)
 
-    df = pd.DataFrame(excel_data)
+    # CSV 파일 초기화
+    # 현재 시간을 "YYYYMMDD" 형식으로 포맷
+    current_date = datetime.now().strftime("%Y%m%d_%H%M")
+    output_file = f"../output/output_{current_date}.csv"
 
-    df.to_excel(f"../output/output.xlsx", index=False)
+    # 첫 번째 시도 시 헤더를 포함해야 함
+    is_first_iteration = True
 
-    # json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
-    # 결과를 파일로 저장
-    # try:
-    #     with open('../output/'+skw.strip()+'.json', 'w', encoding='utf-8') as f:
-    #         f.write(json_data)
-    #
-    # except Exception as e:
-    #     print(f"Error writing to file : {e}")
+    for skw in keyword_list:
+
+        print(f" ############### keyword: {skw}, index: {keyword_list.index(skw)} ###############")
+
+        data_results = main(skw, False)
+
+        excel_data = []
+
+        for result in data_results:
+            name, address = result['name'], result['address']
+            excel_data.append({"Keyword": skw, "Name": name, "Address": address})
+
+        df = pd.DataFrame(excel_data)
+
+        # 데이터를 CSV 파일로 저장
+        df.to_csv(output_file, index=False, encoding="utf-8-sig", mode='a', header=is_first_iteration)
+
+        # 헤더는 첫 번째 반복에서만 쓰고 이후에는 제외
+        is_first_iteration = False
+
+        print(f"############### end keyword : {skw}, index: {keyword_list.index(skw)}  ###############")
 
     print("end process")
