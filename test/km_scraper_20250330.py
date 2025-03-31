@@ -1,13 +1,13 @@
 # from playwright.async_api import async_playwright
 import configparser
 import os
-import re
 import time
 from datetime import datetime
+import pandas as pd
 
 from playwright.sync_api import sync_playwright
+
 from utils import data_utils, string_utils
-import json
 
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
@@ -38,7 +38,6 @@ def main(search_keyword: str, headlsee=True) -> list:
         # chromium_path가 있는 경우에만 launch_options에 추가
         if chromium_path:
             launch_options["executable_path"] = chromium_path
-
 
         # proxy 설정 추가
         if proxy_props['proxy_server']:  # proxy_server가 비어 있지 않다면
@@ -361,16 +360,23 @@ def main(search_keyword: str, headlsee=True) -> list:
 
 
 if __name__ == "__main__":
-    search_keywords: list[str] = ["대야미역 헬스", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ", "コインランドリー"]
+
+    search_keywords: list[str] = ["대야미역 헬스", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ",
+                                  "コインランドリー"]
 
     skw = search_keywords[1]
 
     data_results = main(skw, False)
 
-    for result in data_results:
-        name, address = result['name'],result['address']
-        # write excel
+    excel_data = []
 
+    for result in data_results:
+        name, address = result['name'], result['address']
+        excel_data.append({"Keyword": skw, "Name": name, "Address": address})
+
+    df = pd.DataFrame(excel_data)
+
+    df.to_excel(f"../output/output.xlsx", index=False)
 
     # json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
     # 결과를 파일로 저장
