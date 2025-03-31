@@ -1,20 +1,58 @@
 # from playwright.async_api import async_playwright
 import configparser
+import logging
 import os
 import time
 from datetime import datetime
-import logging
-
-logging.basicConfig(filename='./log/log.log', level=logging.INFO,
-                    format='%(asctime)s %(levelname)s %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-
-
 import pandas as pd
 from playwright.sync_api import sync_playwright
 
 from utils import data_utils, string_utils
+from logging.handlers import TimedRotatingFileHandler
+import sys
 
+# 로거 설정
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# 콘솔 출력 핸들러 (IDE 콘솔에 기록)
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setLevel(logging.DEBUG)
+# console_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+
+# 파일 출력 핸들러 (로그 파일에 기록)
+file_handler = TimedRotatingFileHandler(
+    filename='./log/log.log',
+    when='midnight',
+    interval=1,
+    backupCount=10
+)
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+
+# 로거에 핸들러 추가
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
+
+
+# print를 로그로 리다이렉션
+class PrintLogger:
+    def write(self, message):
+        if message.strip():  # 공백 메시지 제외
+            logging.info(message)
+
+    def flush(self):
+        pass  # 표준 출력에서는 필요. 여기서는 로그만 기록하므로 비워둠.
+
+
+# sys.stdout과 sys.stderr를 리다이렉션
+sys.stdout = PrintLogger()
+sys.stderr = PrintLogger()
+
+# 테스트 로그
+logger.info("This is a log message")
+
+# config
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -391,12 +429,12 @@ if __name__ == "__main__":
     # n번째 인덱스를 제외한 나머지 리스트
     # keyword_list = keyword_list[1:]
 
-
     for skw in keyword_list:
         start_time = time.time()
         formatted_time = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
 
-        print(f" ############### keyword: {skw}, index: {keyword_list.index(skw)}, start_time: {formatted_time} ###############")
+        print(
+            f" ############### keyword: {skw}, index: {keyword_list.index(skw)}, start_time: {formatted_time} ###############")
 
         data_results = main(skw, False)
 
@@ -414,10 +452,10 @@ if __name__ == "__main__":
         # 헤더는 첫 번째 반복에서만 쓰고 이후에는 제외
         is_first_iteration = False
 
-
         end_time = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
         elapsed_time = time.time() - start_time
 
-        print(f"############### end keyword : {skw}, index: {keyword_list.index(skw)}, end_time: {end_time}, elapsed_time: {elapsed_time:.2f} sec  ###############")
+        print(
+            f"############### end keyword : {skw}, index: {keyword_list.index(skw)}, end_time: {end_time}, elapsed_time: {elapsed_time:.2f} sec  ###############")
 
     print("end process")
