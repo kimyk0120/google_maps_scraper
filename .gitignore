@@ -163,3 +163,4 @@ cython_debug/
 
 
 .idea/
+/test/cw_kr.xlsx
