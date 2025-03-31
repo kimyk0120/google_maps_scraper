@@ -3,6 +3,12 @@ import configparser
 import os
 import time
 from datetime import datetime
+import logging
+
+logging.basicConfig(filename='./log/log.log', level=logging.INFO,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+
 
 import pandas as pd
 from playwright.sync_api import sync_playwright
@@ -374,27 +380,31 @@ if __name__ == "__main__":
 
     keyword_list = df.iloc[:, 5].tolist()
 
-    print(keyword_list)
+    # print(keyword_list)
 
     # CSV 파일 초기화
-    # 현재 시간을 "YYYYMMDD" 형식으로 포맷
-    current_date = datetime.now().strftime("%Y%m%d_%H%M")
-    output_file = f"../output/output_{current_date}.csv"
+    output_file = f"../output/output.csv"
 
     # 첫 번째 시도 시 헤더를 포함해야 함
     is_first_iteration = True
 
-    for skw in keyword_list:
+    # n번째 인덱스를 제외한 나머지 리스트
+    # keyword_list = keyword_list[1:]
 
-        print(f" ############### keyword: {skw}, index: {keyword_list.index(skw)} ###############")
+
+    for skw in keyword_list:
+        start_time = time.time()
+        formatted_time = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
+
+        print(f" ############### keyword: {skw}, index: {keyword_list.index(skw)}, start_time: {formatted_time} ###############")
 
         data_results = main(skw, False)
 
         excel_data = []
 
         for result in data_results:
-            name, address = result['name'], result['address']
-            excel_data.append({"Keyword": skw, "Name": name, "Address": address})
+            name, address, scraped_at = result['name'], result['address'], result['scraped_at']
+            excel_data.append({"scraped_at": scraped_at, "Keyword": skw, "Name": name, "Address": address})
 
         df = pd.DataFrame(excel_data)
 
@@ -404,6 +414,10 @@ if __name__ == "__main__":
         # 헤더는 첫 번째 반복에서만 쓰고 이후에는 제외
         is_first_iteration = False
 
-        print(f"############### end keyword : {skw}, index: {keyword_list.index(skw)}  ###############")
+
+        end_time = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+        elapsed_time = time.time() - start_time
+
+        print(f"############### end keyword : {skw}, index: {keyword_list.index(skw)}, end_time: {end_time}, elapsed_time: {elapsed_time:.2f} sec  ###############")
 
     print("end process")
