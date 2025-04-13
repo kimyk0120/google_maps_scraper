@@ -169,48 +169,48 @@ def main(search_keyword: str, headlsee=True) -> list:
                 review_average = None
 
             # infos
-            infos = []
-            try:
-                if page.locator(xpath_props['infos_xpath']).count() > 0:
-                    infos_els = page.locator(xpath_props['infos_xpath']).all()
-                    for info in infos_els:
-                        temp = info.inner_text()
-                        cleaned_temp = string_utils.remove_special_chars(temp)
-                        cleaned_temp = string_utils.remove_multi_space_chars(cleaned_temp)
-                        infos.append(cleaned_temp)
-            except Exception as e:
-                print(e)
+            # infos = []
+            # try:
+            #     if page.locator(xpath_props['infos_xpath']).count() > 0:
+            #         infos_els = page.locator(xpath_props['infos_xpath']).all()
+            #         for info in infos_els:
+            #             temp = info.inner_text()
+            #             cleaned_temp = string_utils.remove_special_chars(temp)
+            #             cleaned_temp = string_utils.remove_multi_space_chars(cleaned_temp)
+            #             infos.append(cleaned_temp)
+            # except Exception as e:
+            #     print(e)
 
             # opens_at
-            try:
-                if page.locator(xpath_props['opens_at_xpath']).count() > 0:
-                    opens = page.locator(xpath_props['opens_at_xpath']).inner_text()
-                    opens = opens.split('⋅')
-
-                    if len(opens) != 1:
-                        opens = opens[1]
-
-                    else:
-                        opens = page.locator(xpath_props['opens_at_xpath']).inner_text()
-                        # print(opens)
-                    opens = opens.replace("\u202f", "")
-                    opens_at = opens.strip()
-                else:
-                    opens_at = ""
-
-                if page.locator(xpath_props['opens_at_xpath2']).count() > 0:
-
-                    try:
-                        opens = page.locator(xpath_props['opens_at_xpath2']).inner_text()
-                        opens = opens.split('⋅')
-                        opens = opens[1]
-                        opens = opens.replace("\u202f", "")
-                        opens_at = opens.strip()
-                    except Exception as e:
-                        opens_at = None
-            except Exception as e:
-                print(e)
-                opens_at = None
+            # try:
+            #     if page.locator(xpath_props['opens_at_xpath']).count() > 0:
+            #         opens = page.locator(xpath_props['opens_at_xpath']).inner_text()
+            #         opens = opens.split('⋅')
+            #
+            #         if len(opens) != 1:
+            #             opens = opens[1]
+            #
+            #         else:
+            #             opens = page.locator(xpath_props['opens_at_xpath']).inner_text()
+            #             # print(opens)
+            #         opens = opens.replace("\u202f", "")
+            #         opens_at = opens.strip()
+            #     else:
+            #         opens_at = ""
+            #
+            #     if page.locator(xpath_props['opens_at_xpath2']).count() > 0:
+            #
+            #         try:
+            #             opens = page.locator(xpath_props['opens_at_xpath2']).inner_text()
+            #             opens = opens.split('⋅')
+            #             opens = opens[1]
+            #             opens = opens.replace("\u202f", "")
+            #             opens_at = opens.strip()
+            #         except Exception as e:
+            #             opens_at = None
+            # except Exception as e:
+            #     print(e)
+            #     opens_at = None
 
             # address
             try:
@@ -234,19 +234,18 @@ def main(search_keyword: str, headlsee=True) -> list:
                 phone = None
 
             # place_type
-            try:
-                place_type = data_utils.extract_data(xpath_props['place_type_xpath'], page)
-            except Exception as e:
-                print(e)
-                place_type = None
+            # try:
+            #     place_type = data_utils.extract_data(xpath_props['place_type_xpath'], page)
+            # except Exception as e:
+            #     print(e)
+            #     place_type = None
 
-            # TODO review info
             # get review list
             review_results = []
             if review_count:
                 try:
                     # page.reload()
-                    page.locator(xpath_props['review_btn_xpath']).click()
+                    page.locator(xpath_props['review_btn_xpath_accom']).click()
                     page.wait_for_selector(xpath_props['data_review_part_xpath'])
 
                     # 초기화
@@ -311,10 +310,10 @@ def main(search_keyword: str, headlsee=True) -> list:
                         review_content = None
 
                     # 리뷰 별
-                    review_rate = review_raw.locator(".jJc9Ad .GHT2ce .kvMYJc span").count()
+                    review_rate = review_raw.locator(".jJc9Ad .fzvQIb").inner_text().strip()
 
                     # 리뷰 작성후 지난 시간
-                    review_at = review_raw.locator(".jJc9Ad .GHT2ce .rsqaWe").inner_text().strip()
+                    review_at = review_raw.locator(".jJc9Ad .xRkPPb").text_content().strip()
 
                     review_image_urls = []
                     if review_raw.locator(".jJc9Ad .GHT2ce .KtCyie").count() > 0:
@@ -339,12 +338,12 @@ def main(search_keyword: str, headlsee=True) -> list:
                 'name': name,
                 'review_count': review_count,
                 'review_average': review_average,
-                'infos': infos,
-                'opens_at': opens_at,
+                # 'infos': infos,
+                # 'opens_at': opens_at,
                 'address': address,
                 'website': website,
                 'phone': phone,
-                'place_type': place_type,
+                # 'place_type': place_type,
                 'reviews': review_results,
                 'scraped_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
@@ -360,13 +359,13 @@ def main(search_keyword: str, headlsee=True) -> list:
 
 
 if __name__ == "__main__":
-    search_keywords: list[str] = ["대야미역", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ", "コインランドリー"]
+    search_keywords: list[str] = ["양곤 호텔", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ", "コインランドリー"]
 
-    data_results = main(search_keywords[1], False)
+    data_results = main(search_keywords[0], False)
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
     # 결과를 파일로 저장
     try:
-        with open('../output/output.json', 'w', encoding='utf-8') as f:
+        with open('../output/output_.json', 'w', encoding='utf-8') as f:
             f.write(json_data)
 
     except Exception as e:
