@@ -1,7 +1,9 @@
 # from playwright.async_api import async_playwright
 import configparser
+import logging
 import os
 import re
+import sys
 import time
 from datetime import datetime
 
@@ -9,6 +11,8 @@ import requests
 from playwright.sync_api import sync_playwright
 from utils import data_utils, string_utils
 import json
+
+from logging.handlers import TimedRotatingFileHandler
 
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
@@ -24,6 +28,47 @@ conf_props = config['CONFIG']
 proxy_props = config['PROXY']
 
 chromium_path = path_props['chromium_path']
+
+# 로거 설정
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# 콘솔 출력 핸들러 (IDE 콘솔에 기록)
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setLevel(logging.DEBUG)
+# console_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+
+# 파일 출력 핸들러 (로그 파일에 기록)
+file_handler = TimedRotatingFileHandler(
+    filename='./log/log.log',
+    when='midnight',
+    interval=1,
+    backupCount=10
+)
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+
+# 로거에 핸들러 추가
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
+
+
+# print를 로그로 리다이렉션
+class PrintLogger:
+    def write(self, message):
+        if message.strip():  # 공백 메시지 제외
+            logging.info(message)
+
+    def flush(self):
+        pass  # 표준 출력에서는 필요. 여기서는 로그만 기록하므로 비워둠.
+
+
+# sys.stdout과 sys.stderr를 리다이렉션
+sys.stdout = PrintLogger()
+sys.stderr = PrintLogger()
+
+# 테스트 로그
+logger.info("This is a log message")
 
 
 def split_translation(data):
@@ -459,17 +504,32 @@ def main(search_keyword: str, headlsee=True) -> list:
 
 
 if __name__ == "__main__":
+
     search_keywords: list[str] = ["양곤 호텔", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ",
                                   "コインランドリー"]
 
-    data_results = main(search_keywords[0], False)
+    search_keyword = search_keywords[0]
+
+    start_time = time.time()
+    formatted_time = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
+
+    print(
+        f" ############### keyword: {search_keyword}, start_time: {formatted_time} ###############")
+
+    data_results = main(search_keyword, False)
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
     # 결과를 파일로 저장
     try:
-        with open('../output/output_.json', 'w', encoding='utf-8') as f:
+        with open(f'../output/output_{search_keyword}.json', 'w', encoding='utf-8') as f:
             f.write(json_data)
 
     except Exception as e:
         print(f"Error writing to file : {e}")
+
+    end_time = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+    elapsed_time = time.time() - start_time
+
+    print(
+        f"############### end keyword : {search_keyword}, end_time: {end_time}, elapsed_time: {elapsed_time:.2f} sec  ###############")
 
     print("end process")
