@@ -5,14 +5,14 @@
             "Booking.com\nCA$110\n\n즉시 예약 확정 · 24시간 고객 서비스 · 무료 취소 기한: 4월 30일 · 무료 Wi-Fi\nCA$127(세금 및 수수료 포함)",
             "Trip.com\nCA$103\n\n무료 취소 기한: 5월 1일 · 무료 Wi-Fi · 무료 주차\nCA$117(세금 및 수수료 포함)",
             "Agoda\nCA$89\n\n무료 취소 기한: 4월 30일\nCA$101(세금 및 수수료 포함)",
-            "ca.KAYAK.com\nCA$101\n\n무료 취소 기한: 5월 1일\nCA$115(세금 및 수수료 포함)",
+            "Hotelscombined.ca\nCA$101\n\n무료 취소 기한: 5월 1일\nCA$115(세금 및 수수료 포함)",
             "Agoda\nCA$89\n\n무료 취소 기한: 4월 30일\nCA$101(세금 및 수수료 포함)",
             "Booking.com\nCA$110\n\n무료 취소 기한: 4월 30일 · 무료 Wi-Fi\nCA$127(세금 및 수수료 포함)"
         ],
         "review_count": 3394,
         "review_average": 4.6,
-        "latitude": "16.8201056",
-        "longitude": "96.1085362",
+        "latitude": "16.8443204",
+        "longitude": "96.1372798",
         "address": "82 Sin Phyu Shin Avenue, Yangon 11091 미얀마",
         "website": "lottehotel.com",
         "phone": "+95 1 935 1000",
@@ -42,7 +42,7 @@
                 "review_at": "2달 전 Google에 게시됨"
             }
         ],
-        "scraped_at": "2025-04-12 23:15:34"
+        "scraped_at": "2025-04-12 23:35:59"
     },
     {
         "name": "호텔 양곤",
@@ -50,14 +50,14 @@
             "Trip.com\nCA$81\n\n조식 포함 · 무료 Wi-Fi · 무료 주차\nCA$93(세금 및 수수료 포함)",
             "Agoda\nCA$52\n\n무료 취소 기한: 4월 30일\nCA$58(세금 및 수수료 포함)",
             "Bluepillow.ca\nCA$58\n\n무료 취소 기한: 5월 1일\nCA$58(세금 및 수수료 포함)",
-            "goseek.com\nCA$52\n\n무료 취소 기한: 5월 1일 · 조식 포함\nCA$58(세금 및 수수료 포함)",
+            "Vio.com\nCA$52\n\n무료 취소 기한: 5월 1일 · 조식 포함\nCA$58(세금 및 수수료 포함)",
             "Agoda\nCA$52\n\n무료 취소 기한: 4월 30일\nCA$58(세금 및 수수료 포함)",
             "Wego Marketplace\nCA$52\n\nCA$58(세금 및 수수료 포함)"
         ],
         "review_count": 862,
         "review_average": 3.8,
-        "latitude": "16.8201056",
-        "longitude": "96.1085362",
+        "latitude": "16.8659813",
+        "longitude": "96.1430416",
         "address": "91/93 Pyay Rd, Yangon, 미얀마",
         "website": "hotelyangon.net",
         "phone": "+95 9 44290 5697",
@@ -92,7 +92,7 @@
                 "review_at": "4년 전 Google에 게시됨"
             }
         ],
-        "scraped_at": "2025-04-12 23:15:42"
+        "scraped_at": "2025-04-12 23:36:07"
     },
     {
         "name": "팬 퍼시픽 양곤",
@@ -106,8 +106,8 @@
         ],
         "review_count": 2099,
         "review_average": 4.6,
-        "latitude": "16.8201056",
-        "longitude": "96.1085362",
+        "latitude": "16.7787306",
+        "longitude": "96.1535162",
         "address": "Corner of Bogyoke Aung San Road and ဘုရားလမ်း, Yangon, 미얀마",
         "website": "panpacific.com",
         "phone": "+95 1 925 3810",
@@ -141,6 +141,6 @@
                 "review_at": "3달 전 Google에 게시됨"
             }
         ],
-        "scraped_at": "2025-04-12 23:15:50"
+        "scraped_at": "2025-04-12 23:36:14"
     }
 ]

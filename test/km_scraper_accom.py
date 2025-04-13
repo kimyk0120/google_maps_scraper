@@ -40,7 +40,6 @@ def main(search_keyword: str, headlsee=True) -> list:
         if chromium_path:
             launch_options["executable_path"] = chromium_path
 
-
         # proxy 설정 추가
         if proxy_props['proxy_server']:  # proxy_server가 비어 있지 않다면
             launch_options["proxy"] = {"server": proxy_props['proxy_server']}
@@ -169,6 +168,21 @@ def main(search_keyword: str, headlsee=True) -> list:
                 print(e)
                 review_average = None
 
+            # 좌표
+            try:
+                current_url = page.url
+                # 정규식으로 좌표 추출
+                match = re.search(r"3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", current_url)
+                if match:
+                    latitude = match.group(1)  # 위도
+                    longitude = match.group(2)  # 경도
+                    print(f"Latitude: {latitude}, Longitude: {longitude}")
+
+            except Exception as e:
+                print(e)
+                latitude = None
+                longitude = None
+                continue
 
             # address
             try:
@@ -190,7 +204,6 @@ def main(search_keyword: str, headlsee=True) -> list:
             except Exception as e:
                 print(e)
                 phone = None
-
 
             # 요금
             price_infos = []
@@ -255,7 +268,6 @@ def main(search_keyword: str, headlsee=True) -> list:
 
             # 뒤로가기
             # page.locator('button.iPpe6d[aria-label="뒤로"]').click()
-
 
             # get review list
             review_results = []
@@ -390,6 +402,8 @@ def main(search_keyword: str, headlsee=True) -> list:
                 'price_infos': price_infos,
                 'review_count': review_count,
                 'review_average': review_average,
+                'latitude': latitude,
+                'longitude': longitude,
                 'address': address,
                 'website': website,
                 'phone': phone,
@@ -408,7 +422,8 @@ def main(search_keyword: str, headlsee=True) -> list:
 
 
 if __name__ == "__main__":
-    search_keywords: list[str] = ["양곤 호텔", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ", "コインランドリー"]
+    search_keywords: list[str] = ["양곤 호텔", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ",
+                                  "コインランドリー"]
 
     data_results = main(search_keywords[0], False)
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
