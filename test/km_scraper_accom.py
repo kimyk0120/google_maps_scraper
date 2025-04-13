@@ -1,9 +1,11 @@
 # from playwright.async_api import async_playwright
 import configparser
+import hashlib
 import logging
 import os
 import re
 import sys
+import base64
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -72,6 +74,13 @@ sys.stderr = PrintLogger()
 
 # 테스트 로그
 logger.info("This is a log message")
+
+
+
+def convert_url_to_safe_file_name(url, extension=".jpg"):
+    hashed_name = hashlib.md5(url.encode("utf-8")).hexdigest()
+    return f"{hashed_name}{extension}"
+
 
 
 def split_translation(data):
@@ -193,7 +202,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                 print("store page loaded")
             except Exception as e:
                 print(e)
-                print("store page not loaded")
+                print("!! store page not loaded")
                 continue
 
             page.wait_for_timeout(3000)
@@ -206,7 +215,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                 else:
                     continue  # name은 없으면 continue..
             except Exception as e:
-                print(e)
+                print("!!", e)
                 continue
 
             # review count
@@ -218,7 +227,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                 else:
                     review_count = None
             except Exception as e:
-                print(e)
+                print("!!", e)
                 review_count = None
 
             # review_average
@@ -230,7 +239,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                 else:
                     review_average = None
             except Exception as e:
-                print(e)
+                print("!!", e)
                 review_average = None
 
             # 좌표
@@ -244,7 +253,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                     print(f"Latitude: {latitude}, Longitude: {longitude}")
 
             except Exception as e:
-                print(e)
+                print("!!", e)
                 latitude = None
                 longitude = None
 
@@ -252,21 +261,21 @@ def main(search_keyword: str, headlsee=True) -> list:
             try:
                 address = data_utils.extract_data(xpath_props['address_xpath'], page)
             except Exception as e:
-                print(e)
+                print("!!", e)
                 address = None
 
             # website
             try:
                 website = data_utils.extract_data(xpath_props['website_xpath'], page)
             except Exception as e:
-                print(e)
+                print("!!", e)
                 website = None
 
             # phone_number
             try:
                 phone = data_utils.extract_data(xpath_props['phone_number_xpath'], page)
             except Exception as e:
-                print(e)
+                print("!!", e)
                 phone = None
 
             # 요금
@@ -288,7 +297,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                         price_infos.append(cleaned_list)
 
             except Exception as e:
-                print(e)
+                print("!!", e)
 
             # 뒤로가기
             # page.locator('button.iPpe6d[aria-label="뒤로"]').click()
@@ -322,7 +331,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                     qna_results.append({'question': qna_results_cleaned, 'answers': answers})
 
             except Exception as e:
-                print(e)
+                print("!!", e)
 
             listing.click()
             page.wait_for_timeout(500)
@@ -376,7 +385,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                             print(f"리뷰 로드가 {timeout}초 이내 완료되지 않음 - 타임아웃 발생")
                             break
                 except Exception as e:
-                    print("리뷰 데이터 가져오는 중 오류 발생")
+                    print("!! 리뷰 데이터 가져오는 중 오류 발생")
                     print(e)
 
                 print('리뷰 데이터 파싱..')
@@ -424,7 +433,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                                     image_url = 'https:' + image_url
 
                                 # 이미지 파일 이름 정리
-                                image_name = f"image_{i + 1}.jpg"  # 순차적으로 이름 지정
+                                image_name = convert_url_to_safe_file_name(image_url)
                                 image_path = os.path.join(image_dir, image_name)
 
                                 # 파일이 이미 존재하는지 확인
@@ -445,7 +454,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                                     print(f"Image already exists: {image_path}")
 
                             except Exception as e:
-                                print(f"Failed to download {image_url}: {e}")
+                                print(f"!! Failed to download {image_url}: {e}")
 
                     review_results.append({
                         "review_name": review_name,
@@ -477,7 +486,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                 infos = cleaned_infos
 
             except Exception as e:
-                print(e)
+                print("!!", e)
 
             parse_result = {
                 'name': name,
@@ -526,7 +535,7 @@ if __name__ == "__main__":
             f.write(json_data)
 
     except Exception as e:
-        print(f"Error writing to file : {e}")
+        print(f"!! Error writing to file : {e}")
 
     end_time = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
     elapsed_time = time.time() - start_time
