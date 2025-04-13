@@ -4,6 +4,9 @@ import logging
 import os
 import re
 import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import time
 from datetime import datetime
 
@@ -244,7 +247,6 @@ def main(search_keyword: str, headlsee=True) -> list:
                 print(e)
                 latitude = None
                 longitude = None
-                continue
 
             # address
             try:
@@ -272,9 +274,10 @@ def main(search_keyword: str, headlsee=True) -> list:
             try:
                 if page.locator('a.SlvSdc.co54Ed').count() > 0:
                     price_lows = page.locator('a.SlvSdc.co54Ed').all()
+                    print('price low 리스트 수 : ' + str(len(price_lows)))
+
                     for price_low in price_lows:
                         price_info = price_low.inner_text()
-                        print(f"price: {price_info}")
 
                         price_info_list = price_info.split('\n')
                         price_info_list_cleaned = [re.sub(r'[\ue000-\uf8ff]', '', item).strip() for item in
@@ -293,7 +296,7 @@ def main(search_keyword: str, headlsee=True) -> list:
             # 질문 응답
             qna_results = []
             try:
-                page.locator('//span[text()="질문 더보기"]').click()
+                page.locator('//span[text()="질문 더보기"]').click()  # headless 에서는 적용이 안된다...
                 page.wait_for_timeout(1000)
 
                 iframe = page.frame_locator('iframe.rvN3ke')
@@ -318,10 +321,8 @@ def main(search_keyword: str, headlsee=True) -> list:
 
                     qna_results.append({'question': qna_results_cleaned, 'answers': answers})
 
-
             except Exception as e:
                 print(e)
-                continue
 
             listing.click()
             page.wait_for_timeout(500)
@@ -443,7 +444,6 @@ def main(search_keyword: str, headlsee=True) -> list:
 
                             except Exception as e:
                                 print(f"Failed to download {image_url}: {e}")
-                                continue
 
                     review_results.append({
                         "review_name": review_name,
@@ -475,7 +475,6 @@ def main(search_keyword: str, headlsee=True) -> list:
 
             except Exception as e:
                 print(e)
-                continue
 
             parse_result = {
                 'name': name,
@@ -516,7 +515,7 @@ if __name__ == "__main__":
     print(
         f" ############### keyword: {search_keyword}, start_time: {formatted_time} ###############")
 
-    data_results = main(search_keyword, False)
+    data_results = main(search_keyword, False) # 질문 답변 파트에서 headless 적용이 안됨 iframe 때문일듯
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
     # 결과를 파일로 저장
     try:
