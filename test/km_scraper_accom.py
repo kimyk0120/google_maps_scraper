@@ -26,6 +26,23 @@ proxy_props = config['PROXY']
 chromium_path = path_props['chromium_path']
 
 
+def split_translation(data):
+    # 연속된 줄바꿈을 하나로 정리
+    cleaned_data = re.sub(r'\n+', '\n', data).strip()
+
+    # "(Google 번역)"과 "(원본)"을 기준으로 나눔
+    parts = re.split(r'\((Google 번역|원본)\)', cleaned_data)
+
+    # 결과 배열 생성
+    result = []
+    for i in range(1, len(parts), 2):  # 홀수 인덱스 = (Google 번역), (원본)
+        label = parts[i]  # 라벨: Google 번역 또는 원본
+        text = parts[i + 1].strip()  # 라벨에 해당하는 텍스트
+        result.append(f"({label}) {text}")
+
+    return result
+
+
 # scrape 시작
 def main(search_keyword: str, headlsee=True) -> list:
     with (sync_playwright() as p):
@@ -213,61 +230,56 @@ def main(search_keyword: str, headlsee=True) -> list:
                     for price_low in price_lows:
                         price_info = price_low.inner_text()
                         print(f"price: {price_info}")
-                        price_infos.append(price_info)
+
+                        price_info_list = price_info.split('\n')
+                        price_info_list_cleaned = [re.sub(r'[\ue000-\uf8ff]', '', item).strip() for item in
+                                                   price_info_list]
+
+                        cleaned_list = [item for item in price_info_list_cleaned if item != ""]
+
+                        price_infos.append(cleaned_list)
 
             except Exception as e:
                 print(e)
 
-            # # images
-            # try:
-            #     page.locator('button.K4UgGe[data-carousel-index="0"]').click()
-            #     page.wait_for_timeout(1000)
-            #     page.wait_for_selector("div.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde") # 목록 상위
-            #     page.locator("div.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde").click()
-            #
-            #     total_image_listings = []
-            #     previous_list_size = 0
-            #     timeout = int(conf_props['timout_sec'])  # 초 단위로 설정
-            #     start_time = time.time()
-            #
-            #     print("이미지 스크롤 시작...")
-            #
-            #     while True:
-            #         page.mouse.wheel(0, 5000)
-            #         page.wait_for_timeout(1500)
-            #
-            #         current_list_size = page.locator("div.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde > div.m6QErb.XiKgde > div").count()
-            #         if current_list_size:
-            #             new_image_list = page.locator("div.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde > div.m6QErb.XiKgde > div").all()[
-            #                               previous_list_size:current_list_size]
-            #
-            #             # 누적 리스트에 추가
-            #             total_image_listings.extend(new_image_list)
-            #
-            #             # 새로운 이미지를 불러온 경우 타임아웃 초기화
-            #             if current_list_size > previous_list_size:
-            #                 start_time = time.time()
-            #                 previous_list_size = current_list_size
-            #                 print("새로운 이미지 발견 - 타임아웃 초기화")
-            #
-            #             # 제한 수에 도달하면 종료
-            #             if len(total_image_listings) >= int(
-            #                     conf_props['image_limit_cnt']):
-            #                 print("이미지 limit 도달하여 로드 완료")
-            #                 total_image_listings = total_image_listings[:int(
-            #                     conf_props['image_limit_cnt'])]
-            #                 break
-            #
-            #             # 타임아웃 처리 (지정된 시간 동안 새로운 리뷰가 없으면 종료)
-            #             if time.time() - start_time > timeout:
-            #                 print(f"이미지 로드가 {timeout}초 이내 완료되지 않음 - 타임아웃 발생")
-            #                 break
-            #
-            # except Exception as e:
-            #     print(e)
-
             # 뒤로가기
             # page.locator('button.iPpe6d[aria-label="뒤로"]').click()
+
+            # 질문 응답
+            qna_results = []
+            try:
+                page.locator('//span[text()="질문 더보기"]').click()
+                page.wait_for_timeout(1000)
+
+                iframe = page.frame_locator('iframe.rvN3ke')
+                iframe.locator('div[jscontroller="s2Fp0c"]').wait_for()  # 내부 요소가 보일 때까지 대기
+
+                # iframe 내부에서 작업 계속 진행
+                qna_list_div = iframe.locator('div[jscontroller="s2Fp0c"] > div').all()
+                print('qna 목록 수 : ', len(qna_list_div))
+
+                for qna_div in qna_list_div:
+                    question = qna_div.locator('div.NXtIPd').nth(0).inner_text().strip()
+
+                    # 뉴라인 분리 적용
+                    qna_results_cleaned = split_translation(question)
+
+                    answers_divs = qna_div.locator('div.V4O16c').all()
+                    answers = []
+                    for answer_div in answers_divs:
+                        answer = answer_div.inner_text().strip()
+                        answer_cleaned = split_translation(answer)
+                        answers.append(answer_cleaned)
+
+                    qna_results.append({'question': qna_results_cleaned, 'answers': answers})
+
+
+            except Exception as e:
+                print(e)
+                continue
+
+            listing.click()
+            page.wait_for_timeout(500)
 
             # get review list
             review_results = []
@@ -397,9 +409,34 @@ def main(search_keyword: str, headlsee=True) -> list:
                         'review_at': review_at
                     })
 
+            # 정보
+            infos = []
+            try:
+                page.locator('//button[@role="tab"][4]').click()
+                page.wait_for_selector('div.QoXOEc.fontBodySmall')
+
+                role_divs = page.locator('div.QoXOEc.fontBodySmall  div[role="img"]').all()
+                for role_div in role_divs:
+                    role = role_div.inner_text().strip()
+                    print(f"role: {role}")
+                    infos.append(role)
+
+                # 특수문자와 줄바꿈 제거
+                cleaned_infos = [
+                    re.sub(r"^[^\w\s]+|\n", "", info) for info in infos
+                ]
+
+                infos = cleaned_infos
+
+            except Exception as e:
+                print(e)
+                continue
+
             parse_result = {
                 'name': name,
+                'infos': infos,
                 'price_infos': price_infos,
+                'qna_results': qna_results,
                 'review_count': review_count,
                 'review_average': review_average,
                 'latitude': latitude,
