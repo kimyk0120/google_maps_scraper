@@ -1,8 +1,18 @@
 [
     {
         "name": "롯데호텔 양곤",
+        "price_infos": [
+            "Booking.com\nCA$110\n\n즉시 예약 확정 · 24시간 고객 서비스 · 무료 취소 기한: 4월 30일 · 무료 Wi-Fi\nCA$127(세금 및 수수료 포함)",
+            "Trip.com\nCA$103\n\n무료 취소 기한: 5월 1일 · 무료 Wi-Fi · 무료 주차\nCA$117(세금 및 수수료 포함)",
+            "Agoda\nCA$89\n\n무료 취소 기한: 4월 30일\nCA$101(세금 및 수수료 포함)",
+            "ca.KAYAK.com\nCA$101\n\n무료 취소 기한: 5월 1일\nCA$115(세금 및 수수료 포함)",
+            "Agoda\nCA$89\n\n무료 취소 기한: 4월 30일\nCA$101(세금 및 수수료 포함)",
+            "Booking.com\nCA$110\n\n무료 취소 기한: 4월 30일 · 무료 Wi-Fi\nCA$127(세금 및 수수료 포함)"
+        ],
         "review_count": 3394,
         "review_average": 4.6,
+        "latitude": "16.8201056",
+        "longitude": "96.1085362",
         "address": "82 Sin Phyu Shin Avenue, Yangon 11091 미얀마",
         "website": "lottehotel.com",
         "phone": "+95 1 935 1000",
@@ -30,154 +40,24 @@
                 "review_rate": "5/5",
                 "review_image_urls": [],
                 "review_at": "2달 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "맛있는 조식, 깨끗한 방, 호텔 주변 시설까지 모두 좋았습니다.다음에 방문할때도 다시 예약하고 싶네요. 단점은 호텔 위치가 좀 관광지와 멀어서 택시 이용이 필수 입니다.",
-                "review_rate": "4.6/5",
-                "review_image_urls": [],
-                "review_at": "3달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "동료와 함께 롯데호텔에 묵었습니다.양곤에서 한국 사람이 머물기 가장 적합한 호텔입니다. 호텔입구로 나와 왼쪽편으로 300m 정도 올라가면 호수변을 따라 산책 혹은 러닝이 가능합니다.아침일찍 나가면 일출을 동시에 감상할 수 있기에 추천합니다.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "4달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "양곤내 최고 호텔입니다.  공항가깝고 조식, 서비스 양곤내 이런 호텔 없습니다. 다만 시내 투어스팟이랑은 다소 거리가ㅠ있지만 모두 택시로  커버 가능한 거리입니다",
-                "review_rate": "4.5/5",
-                "review_image_urls": [],
-                "review_at": "4달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "객실, 시설이 깨끗하고 직원들 친절하며 식사 휼륭하고 운동시설 수영장 등 편의시설도 최상급입니다. 강추드립니다.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "3달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "제임스 킴",
-                "review_info": null,
-                "review_content": "엄청 맛있습니다. 한국에 맛을 찾았습니다. 한번 더 방문에서 다시 먹을 생각이 있습니다. 특히 삼겹살 너무 맛있게 잘먹었습니다.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "2달 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "Dong Cheol K",
-                "review_info": null,
-                "review_content": "훌륭한 시설과 맛있는 음식에 친절한 서비스에 감사드립니다.Lotte Mugunghwa is best  at service and food is very delicious.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "2달 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "쀼 뾰",
-                "review_info": null,
-                "review_content": "롯데호텔 무궁화 한식레스토랑 한국음식과 완전 똑같아서 매우 만족합니다 양도 푸짐하고 맛도 일품 모든게 다 맛있어요 딱 한가지가 김치가 산초맛이 강해서 향신료를 잘 못막는 저에겐 힘이들었어요 하지만 그 외에 다른 모든음식은 맛닜아요 김치전도 바삭바삭 닭갈비도 맛있고 무엇보다 닭강정이 아주 맛있어요!! 그리고 감자탕 술마시고 다음날 해장으로 완벽해요 아주 좋아요",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "6달 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "음식,시설,모든것이 완벽한 호텔입니다.이가격에 롯데호텔에 머물수있다는건 행운입니다",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "3달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Jet24550607815",
-                "review_info": null,
-                "review_content": "6월 7일부터 10일까지 3박4일로 머물렀습니다.|방도 크고 깨끗했고 매우 청결해서 좋았습니다.|한식 식당도 한국이랑 가격대는 비슷하지만 맛있게 잘 먹었습니다.순두부찌개랑 김치찌개 먹어봤어요.|그리고 지하에 있는 뷔폐도 가서 한번 먹어봤는데 해산물 종류가 굉장히 충실하게 되어있어서 좋았습니다.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "10달 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "체크인하고 룸상태나 마음에 들어서 양곤 사는 현지직원, 한국활동가 휵가로 추가 예약해서 묵었는데 모두 아주 만족했어요~",
-                "review_rate": "4.6/5",
-                "review_image_urls": [],
-                "review_at": "4달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "친구들과 미얀마 양곤에 갈때마다 늘 트립닷컴을 통해 롯데호텔에 묵고 있습니다.갈때마다 느끼는거지만 위치, 청결도, 아침조식 모두 대만족 입니다",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "3달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "전 직원이 매우 친절합니다.특히 저녁 뷔페 서빙해주시던 여자분이 계셨는데, 계속 웃으시면서 필요한 것들을 센스있게 채워주셨어요. 이름을 모르는게 아쉽네요. 그 직원분 정말 칭찬하고 싶어요.사우나, 수영장, 객실의 침구들 모두 좋았습니다. 잘 쉬고 갑니다!",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "11달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Ziyhang R",
-                "review_info": "지역 가이드 · 리뷰 18개 · 사진 12장",
-                "review_content": "객실에서 보이는 쉐다곤 파고다는 너무 고요하고 멋집니다. 직원들이 친절하고 무궁화, 도림 모두 맛있어요! 수영장 뷰도 좋습니다.",
-                "review_rate": "4/5",
-                "review_image_urls": [
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJJ1ECJhNT_OXhFVampHSGv_fazqXtBs128_UWIEnlsvWhFu1xpRjxSvUhqIlG1P8VGXq47HEo49awqy1hbob4Vp4ZAqgjDA2D1WXBbcPv4_XXRoB4KaTqs2-0Ov5hrknFiJ_yhj=w600-h900-p",
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJKEhFGKrrvmpMa0KurNfDUixLSw1pE0VMEXecjZmUS6Eomxg8JxxbimZTewww8JVOAu1P9TiLZkv98XdqZmPNgrGFKD2xkxFm8KN0htoUxj4kcsLTRFexaAOZ6o7pBRUk9Bj3w=w600-h450-p",
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJKr7xwsgLZd9wAZmqoxZQNEF_EuCHAHdSZgZGIP-hBEVfq7WHNXxjZ4TDvk9NkGYhP5KfFROriXxg7Cpp58BKIDf1zOEI5b7oTZ4IqQGGLZV6uYo9CeEnDlj3uOQ6msLvjxu4on=w600-h450-p"
-                ],
-                "review_at": "6달 전 Google에 게시됨"
-            },
-            {
-                "review_name": "PanThu K",
-                "review_info": null,
-                "review_content": "너무 자러스허고 set mean 되면 더 좋겠어요||너무 맛있어요.||Nyan 너무 좋아용~~.............",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "2주 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "즐거운 시간을 보냈습니다. 특히 깔끔한 호텔 환경 및 친절한 직원들이 인상적 이였습니다. 지인들에 적극 추천합니다.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "7달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Jane Doe",
-                "review_info": "지역 가이드 · 리뷰 86개 · 사진 22장",
-                "review_content": "멜리아 제외 모든 호텔의 환율이 2800-3000으로 변경되서 이제 롯데 호텔의 가성비가 상대적으로 좋아졌습니다. 숙소 자체에 불만은 없습니다. 다만 아쉬운 점은 제가 투숙한 양곤 5성급 중 유일하게 공식 환율이 아닌 자체 환율을 사용하고 있습니다. 그래서 다른 숙소에 비해 가격이…",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "9달 전 Google에 게시됨"
-            },
-            {
-                "review_name": "미얀마이여사",
-                "review_info": "지역 가이드 · 리뷰 464개 · 사진 695장",
-                "review_content": "말이 필요없는 한국 5성급 호텔~ 객실과 인테리어 아직까지 질 관리되고 있습니다. 깔끔해서, 한국에서 오신 손님 모실때 안심되는 장소! 특별히 뷔페식당 인기 많아서 사람이 많아요.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "1달 전 Google에 게시됨"
             }
         ],
-        "scraped_at": "2025-04-12 20:40:09"
+        "scraped_at": "2025-04-12 23:15:34"
     },
     {
         "name": "호텔 양곤",
+        "price_infos": [
+            "Trip.com\nCA$81\n\n조식 포함 · 무료 Wi-Fi · 무료 주차\nCA$93(세금 및 수수료 포함)",
+            "Agoda\nCA$52\n\n무료 취소 기한: 4월 30일\nCA$58(세금 및 수수료 포함)",
+            "Bluepillow.ca\nCA$58\n\n무료 취소 기한: 5월 1일\nCA$58(세금 및 수수료 포함)",
+            "goseek.com\nCA$52\n\n무료 취소 기한: 5월 1일 · 조식 포함\nCA$58(세금 및 수수료 포함)",
+            "Agoda\nCA$52\n\n무료 취소 기한: 4월 30일\nCA$58(세금 및 수수료 포함)",
+            "Wego Marketplace\nCA$52\n\nCA$58(세금 및 수수료 포함)"
+        ],
         "review_count": 862,
         "review_average": 3.8,
+        "latitude": "16.8201056",
+        "longitude": "96.1085362",
         "address": "91/93 Pyay Rd, Yangon, 미얀마",
         "website": "hotelyangon.net",
         "phone": "+95 9 44290 5697",
@@ -210,152 +90,24 @@
                     "https://lh3.googleusercontent.com/geougc-cs/AIHozJLhmGhS7q8J7pJW_Cg5sI-xU2N6ZfSRKW6yQ5j8c9NIKShBGzTootGzSXqV9_7tq1gCH7-PhEPjqKrgSNIlb_WGJ1o9YCt00xFwlRnfB_nteAhQSCpGY00KYz4lmx9HwVopAv5kFA=w600-h450-p"
                 ],
                 "review_at": "4년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Mintaek Jeong",
-                "review_info": "지역 가이드 · 리뷰 140개 · 사진 121장",
-                "review_content": "8마일에 위치한 호텔로 양곤공항과도 가까운거리에 있으며 하루에 피곤을 풀수있는 맛사지샾을 겸비하고 스카이라운지는 중국식당으로 꾸며져있습니다(미리 예약하지않으면 자리잡기가 힘듭니다)",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "7년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "JaiHun Sim",
-                "review_info": "리뷰 163개 · 사진 14장",
-                "review_content": "오래됐지만 넓고 야광 풍경이 좋은 호텔(사진과 달리 베란다는 없음). 직원들도 친절!",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "5년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "David Lee",
-                "review_info": "리뷰 4개",
-                "review_content": "위치가 사통팔달이고 직원친절 방은3스타 수준.음식은 맨 윗층 중국식당 추천합니다.",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "7년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "김영준",
-                "review_info": "지역 가이드 · 리뷰 16개 · 사진 18장",
-                "review_content": "7시이후 음악들으면서 한잔하기에 좋습니다",
-                "review_rate": "5/5",
-                "review_image_urls": [
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJJzOGLNF8PA4f3ww9I7J5i2J4ItAZH2uxmnwa82MkR_MeBJELngtRQDTgHFtZt66rUE6HOtNPWigpwdKiH3V6gx9NNV6kS6YFH3sXV_AZK_YpFvCTVi4uYtNTHEyz63RbbbteCB=w1200-h900-p"
-                ],
-                "review_at": "2년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Simon Jeong",
-                "review_info": "리뷰 3개 · 사진 19장",
-                "review_content": "만은쥥국인이 열라씨끄러워",
-                "review_rate": "3/5",
-                "review_image_urls": [],
-                "review_at": "1년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Sang Ok Jang",
-                "review_info": "지역 가이드 · 리뷰 51개 · 사진 27장",
-                "review_content": "8마일에위치하고 공항 20분 이내 도착 가능함.",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Soyeon",
-                "review_info": "지역 가이드 · 리뷰 46개 · 사진 11장",
-                "review_content": "양곤호텔이 커요 그리고 방이 대박일 정도?",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "7년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Donald Moe",
-                "review_info": "리뷰 3개 · 사진 14장",
-                "review_content": "11층 중국집 말고는 추천하고 싶지 않음",
-                "review_rate": "1/5",
-                "review_image_urls": [],
-                "review_at": "7년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "박기상",
-                "review_info": "지역 가이드 · 리뷰 21개 · 사진 80장",
-                "review_content": "깨끗함 그리고 친절함 교통도편리함",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "김유찬",
-                "review_info": "지역 가이드 · 리뷰 240개 · 사진 8장",
-                "review_content": "비교적 양호하지만 노후된 호텔입니다.",
-                "review_rate": "3/5",
-                "review_image_urls": [],
-                "review_at": "5년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "새롭게연다",
-                "review_info": "지역 가이드 · 리뷰 684개 · 사진 1,866장",
-                "review_content": "깔끔하고 나름 괜찮었어요",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "강산",
-                "review_info": "리뷰 2개",
-                "review_content": "너무 오래된 느낌,",
-                "review_rate": "1/5",
-                "review_image_urls": [],
-                "review_at": "5년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Logboy Kweon",
-                "review_info": "지역 가이드 · 리뷰 335개 · 사진 20장",
-                "review_content": "중식당  좋아요",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Kim Yu Keun",
-                "review_info": "지역 가이드 · 리뷰 25개 · 사진 77장",
-                "review_content": "좋음",
-                "review_rate": "3/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "조현덕",
-                "review_info": "지역 가이드 · 리뷰 74개 · 사진 59장",
-                "review_content": "불편한 객실",
-                "review_rate": "2/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "이동현",
-                "review_info": "리뷰 7개",
-                "review_content": "좋아요",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "KISOO LEE",
-                "review_info": "지역 가이드 · 리뷰 524개 · 사진 112장",
-                "review_content": "아름다운곳",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "5년 전 Google에 게시됨"
             }
         ],
-        "scraped_at": "2025-04-12 20:40:16"
+        "scraped_at": "2025-04-12 23:15:42"
     },
     {
         "name": "팬 퍼시픽 양곤",
+        "price_infos": [
+            "Booking.com\nCA$83\n\nCA$94(세금 및 수수료 포함)",
+            "PanPacific.com\nCA$107\n\n\n공식 사이트\nCA$121(세금 및 수수료 포함)",
+            "Trip.com\nCA$82\n\n무료 Wi-Fi · 무료 주차\nCA$94(세금 및 수수료 포함)",
+            "Agoda\nCA$78\n\nCA$89(세금 및 수수료 포함)",
+            "PanPacific.com\nCA$107\n\n\n공식 사이트\nCA$121(세금 및 수수료 포함)",
+            "Agoda\nCA$78\n\nCA$89(세금 및 수수료 포함)"
+        ],
         "review_count": 2099,
         "review_average": 4.6,
+        "latitude": "16.8201056",
+        "longitude": "96.1085362",
         "address": "Corner of Bogyoke Aung San Road and ဘုရားလမ်း, Yangon, 미얀마",
         "website": "panpacific.com",
         "phone": "+95 1 925 3810",
@@ -387,153 +139,8 @@
                     "https://lh3.googleusercontent.com/geougc-cs/AIHozJIO3HX083ruB2DCPqw1pb2u7ClusWQC17sqYc5Tef_lRTafc0WBq4wrgv_qme0XQNLIelr-HPxVLFZc11dbZdHq124d0e3_6jdAeMEhSeWKGgdsms5AwGgaq0k-j6GJO5ktTxSe=w600-h450-p"
                 ],
                 "review_at": "3달 전 Google에 게시됨"
-            },
-            {
-                "review_name": "아로마코칭mewetherapy",
-                "review_info": "리뷰 4개 · 사진 9장",
-                "review_content": "직원들 너무 친절해요. 5일간 양곤에 있으면서 감탄할 정도의 친절함에 숙박 내내 행복했어요. 1층 안내 \"무\"라는 여직원은 한국어도 아셔서 모든걸 편안하게 도와주셨고 식당의 남자 매니저분은 돌아다니면서 식사 어떠냐고 물어봐주셔서 관심 받는 느낌이 소중한 시간이였어요. 룸청소도…",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "1년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Jai Hong L",
-                "review_info": null,
-                "review_content": "호텔의 시설이나 서비스는 좋습니다. 더 철저한 개인정보관리가 필요합니다.   호텔에 투숙할 때 직원들에게 여권을 스캔하게 합니다. 이 때 여권에 있는 개인정보가 잘 관리되지 않는 것 같습니다. 직원들  누구나가 여권정보를 임의로 취급하도록 하는 것은 개인정보 유출에 대한 불안감을 주게 됩니다. 실제로 직원에 의해 개인정보가 유출된 것 같은 생각이 듭니다.",
-                "review_rate": "2/5",
-                "review_image_urls": [],
-                "review_at": "1년 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "YOUNG",
-                "review_info": "지역 가이드 · 리뷰 336개 · 사진 1,010장",
-                "review_content": "양곤 머물게 되면서 처음 숙박했던 호텔인데, 여기에서 묵기로 한 선택 정말 잘했던 것 같아요. 멜리아, 롯데 그리고 여기 고민했었는데…",
-                "review_rate": "5/5",
-                "review_image_urls": [
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJJQcIlb-Lu2uwOUSHidZVO40DPfaeM_wrKB3NPf4_3wOjXWyv3uxtz_3U4RvprRUyhjZ4g8ITnr0KmcDnVS_kqI5ELL30nf1pO7w9WFUyctPBfJIuhV5_yZwm3SDO1ijfAYuc5Dhg=w600-h450-p",
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJLfI_PqkT1m_8X_6-Xs3Lwu3slg03jLQTtiZTGLr2XhClXVL0lLEsMnU4Not4RthTR3F0isrgoDc28z2aWhU0MlVWjPzbx3BIVMNMVHcCD7th1xTSsJ-7oTKTXYE-dINN7Dku4=w600-h450-p",
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJJw4xfYnWpF_zKGG5e6xF4RTDMKzErJfLiGmtT9HzreuV7Kxavhx5h_WINYmvtubfn_DWNjkXNcPNjf-zF-UE1OBa19WY5KS3Tkl64Ne3aBIxrLQT6DDsc6ZA72GvAOUjeH_lzo=w600-h450-p",
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJJ42__XzHDeGlt0Nd8dfRAAtjjl_seyXPLHHfp_4EI974jsl81bFt6vOc8p6lkYnOHFWHJpP8PbmLBfzFseF0rio69d_OQbBneD0iQY3ARZ69RDM3H7MSluCNHa-e-kTab3SBM=w600-h450-p"
-                ],
-                "review_at": "1년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "위치가 일단 너무 좋아요.딱 중앙지점이라 여기 저기 다니기에 편합니다.다른 호텔에도 묵어봤는데 여기만 못해요.양곤애서 5성급 호텔 찾으신다면 여기로 하세요.조식이 정말 많고 다 퀄리티도 좋습니다.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "1년 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "시설도 좋고 무엇보다도 서비스가 좋습니다.위치도 양곤 시내 한가운데이고 택시기사들도 다 알아요.편히 쉬어서 미얀마 안에 있는 느낌이 아니었네요.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "1년 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "직원들이 친절해서 기분 좋게 머물다 가요. 헬스장 안에 사우나도 있어 좋았고요. 룸도 깨끗해서 좋았어요. 조식은 아시안식으로 구성되어 있고 아침으로 간단하게 먹을만 했어요. 위치도 시내 쪽에다 쇼핑몰과 연결 되어 있어 좋았고요.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "2년 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Jysn B",
-                "review_info": "지역 가이드 · 리뷰 57개 · 사진 32장",
-                "review_content": "5박 했습니다. 직원들 상당히 친절하고 house keeping 꼼꼼하고 room service도 가성비 괜찮고요. 위치가 양곤 중심부에선 어디를 가도 그리 멀지않습니다.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "1년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "최고의 위치, 깨끗한 시설 👍🏻…",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "1달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "1. 위치가 너무 좋습니다. 양곤 시내와 가까워서 여행객에게 좋습니다.2. 주변에 볼거리가 많고 쇼핑몰이 있습니다.3. 관광객에게는 추천 합니다.",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "1년 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "우리 나",
-                "review_info": null,
-                "review_content": "직원들 너무 친절해요. 5일간 양곤에 있으면서 감탄할 정도의 친절함에 숙박 내내 행복했어요. |1층 안내 \"무\"라는 여직원은 한국어도 아셔서 |모든걸 편안하게 도와주셨고 식당의 남자 매니저분은 돌아다니면서 식사 어떠냐고 물어봐주셔서 관심 받는 느낌이 소중한 시간이였어요. 룸청소도 코끼리수건에 한참 웃었네요. 직원들은 100점 만점에 10000점입니다. 다음 시설은 수영장이 크진 않았지만 사진이 이쁘고|맛있는 칵테일과…",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "1년 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "봉기 문",
-                "review_info": null,
-                "review_content": "양곤에서 추천할 만한 현대적인 시설을 갖춘 호텔입니다. 호텔에서 쇼핑을  할 수 있다는 점도 장점입니다. 특히 1층의 커피숍이 좋습니다. 교통면에서도 Sule Pagoda가 근처에 있어 편리합니다.",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "5년 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "Trip.com Member",
-                "review_info": null,
-                "review_content": "너무 만족하고 다시 예약 히고 싶은 호텔입니다 ^^",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "7달 전 Trip.com에 게시됨"
-            },
-            {
-                "review_name": "baram0083",
-                "review_info": null,
-                "review_content": "정션시티와 붙어 있어 편리하다. 롯데리아 피자헛에 한식, 일식 베트남음식 타이음식 등 다양한 식당이 있고 은행 마트, 마트 바로 옆에 휴일 없이 영업하는 환전소가 정션시티에 있어서 외부로 나가지 않고 어지간한 건 모두 해결할수 있다.||로비는 1층에 위치 하지 않아 로비를 거치지 않고 방으로 가거나 외부로 간다.||||침대도 크고 편안한 편이고 젤 싼 방도 욕조가 있다. 하지만 욕조에 갈색 얼룩이 있었는데 3박을 하는 동안…",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Tripadvisor에 게시됨"
-            },
-            {
-                "review_name": "doobidooba what",
-                "review_info": "지역 가이드 · 리뷰 19개 · 사진 14장",
-                "review_content": "위치는 양곤 시내 중심에 정션시티 보족마켓 다 연결돼있어서 캡짱이고요. 직원분들도 너무 친절했습니다. 다만 라운지는 굳이 이용 안해도 될듯..조식도 그렇게 존맛탱은 아니었습니다. 그래도 추천추천",
-                "review_rate": "4/5",
-                "review_image_urls": [
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJKo9ACO--QaozO3Gyp1wXER3r_WnvvcK70Oc7VmKglhUTyjPQDxowE8RkBhZR-MfRb8AMgwpMdx3pAuRvZTn9MkP8kZlj9sJ5ha6-JM-brcTG5a0riu02C-OMXviA5yR5VPmjKH=w600-h900-p",
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJJCMS5ov3ZWMzYfpYbqU5UQbUmN8MMgoP71QqQhmse7z--nYUr285guIiMuxJh-0mEKuaaNFDfb0zyN6Wx8M73hNJ6aBD_9_7xYBz2L7uZBp0vm5E2IdzMnRoELlAiMWvuARw_F=w600-h450-p",
-                    "https://lh3.googleusercontent.com/geougc-cs/AIHozJItuqCSLsH-sZqc7lcHKHbbsxvMC7HRyRzLjeHcyRD8J9H98wVC12x1O2hfuLUe8XAliTnnNbrGHjT7fKzwKnrJR7lul05hKJhTFPbuMFSv18P0Mll5jiS4Kis_81xPFjssJSbrlw=w600-h450-p"
-                ],
-                "review_at": "5년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "Donald Park",
-                "review_info": "지역 가이드 · 리뷰 132개 · 사진 116장",
-                "review_content": "아늑한 조명 아래 따뜻한 분위기의 인테리어.. 편안한 소파에 기대어 디저트를 위한 시간은 최고~!",
-                "review_rate": "4/5",
-                "review_image_urls": [],
-                "review_at": "4년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "bible small (Small bible)",
-                "review_info": "지역 가이드 · 리뷰 153개 · 사진 233장",
-                "review_content": "양곤 최고의 호텔입니다 10만원 초중반의 가격으로 누릴수 있는 행운입니다 정션시티와 한건물…",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "5년 전 Google에 게시됨"
-            },
-            {
-                "review_name": "TV한울방송",
-                "review_info": "리뷰 2개 · 사진 1장",
-                "review_content": "주변에 편의시설이 많네요. 양곤시티 투어하기에 아주 적절한 위치.  호텔시설도 가설비 짱",
-                "review_rate": "5/5",
-                "review_image_urls": [],
-                "review_at": "6년 전 Google에 게시됨"
             }
         ],
-        "scraped_at": "2025-04-12 20:40:24"
+        "scraped_at": "2025-04-12 23:15:50"
     }
 ]

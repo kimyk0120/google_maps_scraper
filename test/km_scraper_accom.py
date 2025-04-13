@@ -5,6 +5,7 @@ import re
 import time
 from datetime import datetime
 
+import requests
 from playwright.sync_api import sync_playwright
 from utils import data_utils, string_utils
 import json
@@ -27,7 +28,7 @@ chromium_path = path_props['chromium_path']
 
 # scrape 시작
 def main(search_keyword: str, headlsee=True) -> list:
-    with sync_playwright() as p:
+    with (sync_playwright() as p):
 
         # launch 옵션 설정
         launch_options = {
@@ -168,49 +169,6 @@ def main(search_keyword: str, headlsee=True) -> list:
                 print(e)
                 review_average = None
 
-            # infos
-            # infos = []
-            # try:
-            #     if page.locator(xpath_props['infos_xpath']).count() > 0:
-            #         infos_els = page.locator(xpath_props['infos_xpath']).all()
-            #         for info in infos_els:
-            #             temp = info.inner_text()
-            #             cleaned_temp = string_utils.remove_special_chars(temp)
-            #             cleaned_temp = string_utils.remove_multi_space_chars(cleaned_temp)
-            #             infos.append(cleaned_temp)
-            # except Exception as e:
-            #     print(e)
-
-            # opens_at
-            # try:
-            #     if page.locator(xpath_props['opens_at_xpath']).count() > 0:
-            #         opens = page.locator(xpath_props['opens_at_xpath']).inner_text()
-            #         opens = opens.split('⋅')
-            #
-            #         if len(opens) != 1:
-            #             opens = opens[1]
-            #
-            #         else:
-            #             opens = page.locator(xpath_props['opens_at_xpath']).inner_text()
-            #             # print(opens)
-            #         opens = opens.replace("\u202f", "")
-            #         opens_at = opens.strip()
-            #     else:
-            #         opens_at = ""
-            #
-            #     if page.locator(xpath_props['opens_at_xpath2']).count() > 0:
-            #
-            #         try:
-            #             opens = page.locator(xpath_props['opens_at_xpath2']).inner_text()
-            #             opens = opens.split('⋅')
-            #             opens = opens[1]
-            #             opens = opens.replace("\u202f", "")
-            #             opens_at = opens.strip()
-            #         except Exception as e:
-            #             opens_at = None
-            # except Exception as e:
-            #     print(e)
-            #     opens_at = None
 
             # address
             try:
@@ -233,12 +191,71 @@ def main(search_keyword: str, headlsee=True) -> list:
                 print(e)
                 phone = None
 
-            # place_type
+
+            # 요금
+            price_infos = []
+            try:
+                if page.locator('a.SlvSdc.co54Ed').count() > 0:
+                    price_lows = page.locator('a.SlvSdc.co54Ed').all()
+                    for price_low in price_lows:
+                        price_info = price_low.inner_text()
+                        print(f"price: {price_info}")
+                        price_infos.append(price_info)
+
+            except Exception as e:
+                print(e)
+
+            # # images
             # try:
-            #     place_type = data_utils.extract_data(xpath_props['place_type_xpath'], page)
+            #     page.locator('button.K4UgGe[data-carousel-index="0"]').click()
+            #     page.wait_for_timeout(1000)
+            #     page.wait_for_selector("div.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde") # 목록 상위
+            #     page.locator("div.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde").click()
+            #
+            #     total_image_listings = []
+            #     previous_list_size = 0
+            #     timeout = int(conf_props['timout_sec'])  # 초 단위로 설정
+            #     start_time = time.time()
+            #
+            #     print("이미지 스크롤 시작...")
+            #
+            #     while True:
+            #         page.mouse.wheel(0, 5000)
+            #         page.wait_for_timeout(1500)
+            #
+            #         current_list_size = page.locator("div.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde > div.m6QErb.XiKgde > div").count()
+            #         if current_list_size:
+            #             new_image_list = page.locator("div.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde > div.m6QErb.XiKgde > div").all()[
+            #                               previous_list_size:current_list_size]
+            #
+            #             # 누적 리스트에 추가
+            #             total_image_listings.extend(new_image_list)
+            #
+            #             # 새로운 이미지를 불러온 경우 타임아웃 초기화
+            #             if current_list_size > previous_list_size:
+            #                 start_time = time.time()
+            #                 previous_list_size = current_list_size
+            #                 print("새로운 이미지 발견 - 타임아웃 초기화")
+            #
+            #             # 제한 수에 도달하면 종료
+            #             if len(total_image_listings) >= int(
+            #                     conf_props['image_limit_cnt']):
+            #                 print("이미지 limit 도달하여 로드 완료")
+            #                 total_image_listings = total_image_listings[:int(
+            #                     conf_props['image_limit_cnt'])]
+            #                 break
+            #
+            #             # 타임아웃 처리 (지정된 시간 동안 새로운 리뷰가 없으면 종료)
+            #             if time.time() - start_time > timeout:
+            #                 print(f"이미지 로드가 {timeout}초 이내 완료되지 않음 - 타임아웃 발생")
+            #                 break
+            #
             # except Exception as e:
             #     print(e)
-            #     place_type = None
+
+            # 뒤로가기
+            # page.locator('button.iPpe6d[aria-label="뒤로"]').click()
+
 
             # get review list
             review_results = []
@@ -325,6 +342,40 @@ def main(search_keyword: str, headlsee=True) -> list:
                                 if url_match:
                                     review_image_urls.append(url_match.group(1))
 
+                    # images 파일로 다운로드
+                    if len(review_image_urls) > 0:
+                        image_dir = os.path.join('../output/images', name)
+                        os.makedirs(image_dir, exist_ok=True)
+                        for i, image_url in enumerate(review_image_urls):
+                            try:
+                                if image_url.startswith('//'):
+                                    image_url = 'https:' + image_url
+
+                                # 이미지 파일 이름 정리
+                                image_name = f"image_{i + 1}.jpg"  # 순차적으로 이름 지정
+                                image_path = os.path.join(image_dir, image_name)
+
+                                # 파일이 이미 존재하는지 확인
+                                if not os.path.exists(image_path):
+                                    print(f"Downloading image: {image_name}")
+
+                                    # 이미지 다운로드
+                                    response = requests.get(image_url, stream=True)
+                                    response.raise_for_status()  # 요청이 성공하지 않으면 에러 발생
+
+                                    # 이미지 파일로 저장
+                                    with open(image_path, 'wb') as file:
+                                        for chunk in response.iter_content(1024):  # 파일을 잘게 나눠서 저장
+                                            file.write(chunk)
+
+                                    print(f"Image saved: {image_path}")
+                                else:
+                                    print(f"Image already exists: {image_path}")
+
+                            except Exception as e:
+                                print(f"Failed to download {image_url}: {e}")
+                                continue
+
                     review_results.append({
                         "review_name": review_name,
                         "review_info": review_info,
@@ -336,14 +387,12 @@ def main(search_keyword: str, headlsee=True) -> list:
 
             parse_result = {
                 'name': name,
+                'price_infos': price_infos,
                 'review_count': review_count,
                 'review_average': review_average,
-                # 'infos': infos,
-                # 'opens_at': opens_at,
                 'address': address,
                 'website': website,
                 'phone': phone,
-                # 'place_type': place_type,
                 'reviews': review_results,
                 'scraped_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
