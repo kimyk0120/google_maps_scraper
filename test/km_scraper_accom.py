@@ -202,7 +202,7 @@ def main(search_keyword: str, headlsee=True) -> list:
             try:
                 if page.locator(xpath_props['name_xpath']).count() > 0:
                     name = page.locator(xpath_props['name_xpath']).inner_text()
-                    print("store name : ", name)
+                    print("store name : " + str(name))
                 else:
                     continue  # name은 없으면 continue..
             except Exception as e:
@@ -304,7 +304,7 @@ def main(search_keyword: str, headlsee=True) -> list:
 
                 # iframe 내부에서 작업 계속 진행
                 qna_list_div = iframe.locator('div[jscontroller="s2Fp0c"] > div').all()
-                print('qna 목록 수 : ', len(qna_list_div))
+                print('qna 목록 수 : ' + str(len(qna_list_div)))
 
                 for qna_div in qna_list_div:
                     question = qna_div.locator('div.NXtIPd').nth(0).inner_text().strip()
@@ -379,9 +379,10 @@ def main(search_keyword: str, headlsee=True) -> list:
                     print("리뷰 데이터 가져오는 중 오류 발생")
                     print(e)
 
+                print('리뷰 데이터 파싱..')
                 for review_raw in total_review_listings:
                     review_name = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.d4r55").inner_text().strip()
-                    print("review_name: ", review_name)
+                    # print("review_name: ", review_name)
 
                     # 리뷰어 정보 없을 수 있음
                     if review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.RfnDt").count() > 0:
@@ -413,6 +414,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                                     review_image_urls.append(url_match.group(1))
 
                     # images 파일로 다운로드
+                    print("downloading images...")
                     if len(review_image_urls) > 0:
                         image_dir = os.path.join('../output/images', name)
                         os.makedirs(image_dir, exist_ok=True)
@@ -455,6 +457,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                     })
 
             # 정보
+            print('정보 데이터 파싱..')
             infos = []
             try:
                 page.locator('//button[@role="tab"][4]').click()
@@ -463,7 +466,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                 role_divs = page.locator('div.QoXOEc.fontBodySmall  div[role="img"]').all()
                 for role_div in role_divs:
                     role = role_div.inner_text().strip()
-                    print(f"role: {role}")
+                    # print(f"role: {role}")
                     infos.append(role)
 
                 # 특수문자와 줄바꿈 제거
@@ -493,7 +496,7 @@ def main(search_keyword: str, headlsee=True) -> list:
             }
 
             data_results.append(parse_result)
-            print("parse_result: ", parse_result)
+            # print("parse_result: ", parse_result)
 
         print("end processing data")
 
