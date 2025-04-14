@@ -76,11 +76,9 @@ sys.stderr = PrintLogger()
 logger.info("This is a log message")
 
 
-
 def convert_url_to_safe_file_name(url, extension=".jpg"):
     hashed_name = hashlib.md5(url.encode("utf-8")).hexdigest()
     return f"{hashed_name}{extension}"
-
 
 
 def split_translation(data):
@@ -192,7 +190,7 @@ def main(search_keyword: str, headlsee=True) -> list:
 
         # list loop
         data_results = []
-        for listing in total_listings:
+        for list_idx, listing in enumerate(total_listings):
 
             listing.click()
             page.wait_for_timeout(2000)
@@ -420,12 +418,12 @@ def main(search_keyword: str, headlsee=True) -> list:
                                 style_attribute = url_img.get_attribute("style")
                                 url_match = re.search(r'url\("?(.*?)"?\)', style_attribute)
                                 if url_match:
-                                    review_image_urls.append({"url" : url_match.group(1)})
+                                    review_image_urls.append({"url": url_match.group(1)})
 
                     # images 파일로 다운로드
                     print("downloading images...")
                     if len(review_image_urls) > 0:
-                        image_dir = os.path.join('../output/images', name)
+                        image_dir = os.path.join('../output/images', str(list_idx))
                         os.makedirs(image_dir, exist_ok=True)
                         for i, image_url in enumerate(review_image_urls):
                             try:
@@ -459,7 +457,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                                 else:
                                     print(f"Image already exists: {image_path}")
 
-                                review_image_urls[i]['path'] = os.path.join(str(r_idx), image_name)
+                                review_image_urls[i]['path'] = os.path.join(str(list_idx), str(r_idx), image_name)
 
                             except Exception as e:
                                 print(f"!! Failed to download {image_url}: {e}")
@@ -498,6 +496,7 @@ def main(search_keyword: str, headlsee=True) -> list:
 
             parse_result = {
                 'name': name,
+                'idx': str(list_idx),
                 'infos': infos,
                 'price_infos': price_infos,
                 'qna_results': qna_results,
@@ -535,7 +534,7 @@ if __name__ == "__main__":
     print(
         f" ############### keyword: {search_keyword}, start_time: {formatted_time} ###############")
 
-    data_results = main(search_keyword, False) # 질문 답변 파트에서 headless 적용이 안됨 iframe 때문일듯
+    data_results = main(search_keyword, False)  # 질문 답변 파트에서 headless 적용이 안됨 iframe 때문일듯
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
     # 결과를 파일로 저장
     try:
