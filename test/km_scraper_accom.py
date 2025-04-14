@@ -389,7 +389,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                     print(e)
 
                 print('리뷰 데이터 파싱..')
-                for review_raw in total_review_listings:
+                for r_idx, review_raw in enumerate(total_review_listings):
                     review_name = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.d4r55").inner_text().strip()
                     # print("review_name: ", review_name)
 
@@ -420,7 +420,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                                 style_attribute = url_img.get_attribute("style")
                                 url_match = re.search(r'url\("?(.*?)"?\)', style_attribute)
                                 if url_match:
-                                    review_image_urls.append(url_match.group(1))
+                                    review_image_urls.append({"url" : url_match.group(1)})
 
                     # images 파일로 다운로드
                     print("downloading images...")
@@ -429,12 +429,17 @@ def main(search_keyword: str, headlsee=True) -> list:
                         os.makedirs(image_dir, exist_ok=True)
                         for i, image_url in enumerate(review_image_urls):
                             try:
+                                image_url = image_url['url']
                                 if image_url.startswith('//'):
                                     image_url = 'https:' + image_url
 
                                 # 이미지 파일 이름 정리
                                 image_name = convert_url_to_safe_file_name(image_url)
-                                image_path = os.path.join(image_dir, image_name)
+
+                                image_folder_path = os.path.join(image_dir, str(r_idx))
+                                if not os.path.exists(image_folder_path):
+                                    os.makedirs(image_folder_path)
+                                image_path = os.path.join(image_dir, str(r_idx), image_name)
 
                                 # 파일이 이미 존재하는지 확인
                                 if not os.path.exists(image_path):
@@ -450,8 +455,11 @@ def main(search_keyword: str, headlsee=True) -> list:
                                             file.write(chunk)
 
                                     print(f"Image saved: {image_path}")
+
                                 else:
                                     print(f"Image already exists: {image_path}")
+
+                                review_image_urls[i]['path'] = os.path.join(str(r_idx), image_name)
 
                             except Exception as e:
                                 print(f"!! Failed to download {image_url}: {e}")
