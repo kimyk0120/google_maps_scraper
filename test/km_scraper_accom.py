@@ -5,19 +5,19 @@ import logging
 import os
 import re
 import sys
-import base64
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import time
 from datetime import datetime
 
 import requests
 from playwright.sync_api import sync_playwright
-from utils import data_utils, string_utils
+from utils import data_utils
 import json
 
 from logging.handlers import TimedRotatingFileHandler
+
+# 현재 파일의 경로를 기준으로 상위 디렉토리를 sys.path에 추가하여,
+# 해당 디렉토리에 있는 모듈들을 import할 수 있도록 설정합니다.
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
@@ -59,13 +59,16 @@ logger.addHandler(file_handler)
 
 
 # print를 로그로 리다이렉션
+# Custom logger class to redirect all print statements to the logging system.
 class PrintLogger:
     def write(self, message):
-        if message.strip():  # 공백 메시지 제외
-            logging.info(message)
+        if message.strip():  # Ignore empty (whitespace-only) messages.
+            logging.info(message)  # Redirect to the logging system.
 
     def flush(self):
-        pass  # 표준 출력에서는 필요. 여기서는 로그만 기록하므로 비워둠.
+        # The flush method is needed for compatibility with sys.stdout,
+        # but it's not used here as logs don't require explicit flushing.
+        pass
 
 
 # sys.stdout과 sys.stderr를 리다이렉션
@@ -76,7 +79,9 @@ sys.stderr = PrintLogger()
 logger.info("This is a log message")
 
 
+# Convert a URL into a hashed filename to ensure it is safe for file systems and unique.
 def convert_url_to_safe_file_name(url, extension=".jpg"):
+    # Hash the URL using MD5 to create a unique, safe file name.
     hashed_name = hashlib.md5(url.encode("utf-8")).hexdigest()
     return f"{hashed_name}{extension}"
 
@@ -102,7 +107,7 @@ def split_translation(data):
 def main(search_keyword: str, headlsee=True) -> list:
     with (sync_playwright() as p):
 
-        # launch 옵션 설정
+        # Configure browser launch options for the Playwright scraper
         launch_options = {
             "headless": headlsee,
             "args": ["--start-maximized"]
@@ -164,7 +169,7 @@ def main(search_keyword: str, headlsee=True) -> list:
 
                 # 타임아웃 초기화
                 start_time = time.time()
-                print("리스트 로딩 타입아웃 초기화")
+                print("Resetting timeout after discovering new listings.")
 
                 # 이전 리스트 크기 업데이트
                 previous_list_size = list_size
@@ -515,7 +520,7 @@ def main(search_keyword: str, headlsee=True) -> list:
             data_results.append(parse_result)
             # print("parse_result: ", parse_result)
 
-        print("end processing data")
+        print("Finished processing and scraping data.")
 
         context.close()
         browser.close()
@@ -537,7 +542,7 @@ if __name__ == "__main__":
 
     data_results = main(search_keyword, False)  # 질문 답변 파트에서 headless 적용이 안됨 iframe 때문일듯
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
-    # 결과를 파일로 저장
+    # Save the scraped result data as a JSON file in the output directory.
     try:
         with open(f'../output/output_{search_keyword}.json', 'w', encoding='utf-8') as f:
             f.write(json_data)
