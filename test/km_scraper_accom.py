@@ -463,6 +463,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                                 print(f"!! Failed to download {image_url}: {e}")
 
                     review_results.append({
+                        "review_idx": r_idx,
                         "review_name": review_name,
                         "review_info": review_info,
                         "review_content": review_content,
