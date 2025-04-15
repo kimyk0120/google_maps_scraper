@@ -201,21 +201,28 @@ def main(search_keyword: str, headlsee=True) -> list:
 
         # list loop
         # data_results = []
-        # total_listings = total_listings[56:]
+        # FIXME
+        continu_num = 52
+        total_listings = total_listings[continu_num:]
         for list_idx, listing in enumerate(total_listings):
 
+            list_idx = list_idx + continu_num
             list_start_time = time.time()
             formatted_time = datetime.fromtimestamp(list_start_time).strftime('%Y-%m-%d %H:%M:%S')
 
             print(
                 f" ############### list: {str(list_idx)}, start_time: {formatted_time} ###############")
 
-            listing.click()
-            page.wait_for_timeout(2000)
+            if listing.is_visible():
+                listing.click()
+                page.wait_for_timeout(2000)
+            else:
+                print("!! listing not visible")
+                continue
 
             try:
                 page.wait_for_selector(xpath_props['name_xpath'])
-                print(f"@@@@ store page loaded : " + str(list_idx) + " / " + str(len(total_listings)) + " @@@@")
+                print(f"@@@@ store page loaded : " + str(list_idx) + " / " + str(len(total_listings)+continu_num) + " @@@@")
             except Exception as e:
                 print(e)
                 print("!! store page not loaded")
@@ -506,22 +513,23 @@ def main(search_keyword: str, headlsee=True) -> list:
             print('정보 데이터 파싱..')
             infos = []
             try:
-                page.locator('//button[@role="tab"][4]').click()
-                page.wait_for_timeout(1500)
-                page.wait_for_selector('div.QoXOEc.fontBodySmall')
+                if page.locator('//button[@role="tab"][4]').count() > 0:
+                    page.locator('//button[@role="tab"][4]').click()
+                    page.wait_for_timeout(1500)
+                    page.wait_for_selector('div.QoXOEc.fontBodySmall')
 
-                role_divs = page.locator('div.QoXOEc.fontBodySmall  div[role="img"]').all()
-                for role_div in role_divs:
-                    role = role_div.inner_text().strip()
-                    # print(f"role: {role}")
-                    infos.append(role)
+                    role_divs = page.locator('div.QoXOEc.fontBodySmall  div[role="img"]').all()
+                    for role_div in role_divs:
+                        role = role_div.inner_text().strip()
+                        # print(f"role: {role}")
+                        infos.append(role)
 
-                # 특수문자와 줄바꿈 제거
-                cleaned_infos = [
-                    re.sub(r"^[^\w\s]+|\n", "", info) for info in infos
-                ]
+                    # 특수문자와 줄바꿈 제거
+                    cleaned_infos = [
+                        re.sub(r"^[^\w\s]+|\n", "", info) for info in infos
+                    ]
 
-                infos = cleaned_infos
+                    infos = cleaned_infos
 
             except Exception as e:
                 print("!!", e)
