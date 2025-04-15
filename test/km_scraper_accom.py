@@ -201,6 +201,7 @@ def main(search_keyword: str, headlsee=True) -> list:
 
         # list loop
         # data_results = []
+        # total_listings = total_listings[56:]
         for list_idx, listing in enumerate(total_listings):
 
             list_start_time = time.time()
@@ -452,7 +453,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                         # images 파일로 다운로드
                         print("downloading images...")
                         if len(review_image_urls) > 0:
-                            image_dir = os.path.join('../output/images', str(list_idx))
+                            image_dir = os.path.join('../output/images', name)
                             os.makedirs(image_dir, exist_ok=True)
                             for i, image_url in enumerate(review_image_urls):
                                 try:
@@ -486,7 +487,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                                     else:
                                         print(f"Image already exists: {image_path}")
 
-                                    review_image_urls[i]['path'] = os.path.join(str(list_idx), str(r_idx), image_name)
+                                    review_image_urls[i]['path'] = os.path.join(name, str(r_idx), image_name)
 
                                 except Exception as e:
                                     print(f"!! Failed to download {image_url}: {e}")
@@ -527,7 +528,7 @@ def main(search_keyword: str, headlsee=True) -> list:
 
             parse_result = {
                 'name': name,
-                'idx': str(list_idx),
+                # 'idx': str(list_idx),
                 'infos': infos,
                 'price_infos': price_infos,
                 'qna_results': qna_results,
@@ -547,13 +548,13 @@ def main(search_keyword: str, headlsee=True) -> list:
             elapsed_time = time.time() - list_start_time
 
             print(
-                f"############### end list : {str(list_idx)}, end_time: {end_time}, elapsed_time: {elapsed_time:.2f} sec  ###############")
+                f"############### end {name}, end_time: {end_time}, elapsed_time: {elapsed_time:.2f} sec  ###############")
 
             # data_results.append(parse_result)
             # print("parse_result: ", parse_result)
             json_data = json.dumps(parse_result, ensure_ascii=False, indent=4)
             try:
-                with open(f'../output/json/output_{str(list_idx)}_{name}.json', 'w', encoding='utf-8') as f:
+                with open(f'../output/json/output_{name}.json', 'w', encoding='utf-8') as f:
                     f.write(json_data)
 
             except Exception as e:
