@@ -561,8 +561,10 @@ def main(search_keyword: str, headlsee=True) -> list:
             # data_results.append(parse_result)
             # print("parse_result: ", parse_result)
             json_data = json.dumps(parse_result, ensure_ascii=False, indent=4)
+            output_dir = '../output/json/'
+            os.makedirs(output_dir, exist_ok=True)
             try:
-                with open(f'../output/json/output_{name}.json', 'w', encoding='utf-8') as f:
+                with open(f'{output_dir}/output_{name}.json', 'w', encoding='utf-8') as f:
                     f.write(json_data)
 
             except Exception as e:
@@ -583,7 +585,7 @@ if __name__ == "__main__":
 
 
 
-    search_keyword = search_keywords[5]
+    search_keyword = search_keywords[6]
 
     start_time = time.time()
     formatted_time = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
