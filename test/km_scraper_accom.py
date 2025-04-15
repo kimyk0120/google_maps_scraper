@@ -202,7 +202,7 @@ def main(search_keyword: str, headlsee=True) -> list:
         # list loop
         # data_results = []
         # FIXME
-        continu_num = 52
+        continu_num = 0
         total_listings = total_listings[continu_num:]
         for list_idx, listing in enumerate(total_listings):
 
