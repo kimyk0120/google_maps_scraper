@@ -1,10 +1,14 @@
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # from playwright.async_api import async_playwright
 import configparser
 import hashlib
 import logging
-import os
+
 import re
-import sys
+
 import time
 from datetime import datetime
 
@@ -17,7 +21,7 @@ from logging.handlers import TimedRotatingFileHandler
 
 # 현재 파일의 경로를 기준으로 상위 디렉토리를 sys.path에 추가하여,
 # 해당 디렉토리에 있는 모듈들을 import할 수 있도록 설정합니다.
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 config = configparser.ConfigParser()
 # 'utf-8' 인코딩으로 파일 읽기
@@ -177,6 +181,7 @@ def main(search_keyword: str, headlsee=True) -> list:
             # if found last text break
             if page.locator(f"//span[normalize-space(text())='{last_item_text}']").count() > 0:
                 if page.is_visible(f"//span[normalize-space(text())='{last_item_text}']"):
+                    print("last keyword found")
                     break
 
             # 타임아웃 확인 - 무한 로딩인 경우가 많음
@@ -193,16 +198,23 @@ def main(search_keyword: str, headlsee=True) -> list:
 
         # .end while
 
+
         # list loop
-        data_results = []
+        # data_results = []
         for list_idx, listing in enumerate(total_listings):
+
+            list_start_time = time.time()
+            formatted_time = datetime.fromtimestamp(list_start_time).strftime('%Y-%m-%d %H:%M:%S')
+
+            print(
+                f" ############### list: {str(list_idx)}, start_time: {formatted_time} ###############")
 
             listing.click()
             page.wait_for_timeout(2000)
 
             try:
-                page.wait_for_selector(xpath_props['name_xpath'], timeout=60000, state='attached')
-                print("store page loaded")
+                page.wait_for_selector(xpath_props['name_xpath'])
+                print(f"@@@@ store page loaded : " + str(list_idx) + " / " + str(len(total_listings)) + " @@@@")
             except Exception as e:
                 print(e)
                 print("!! store page not loaded")
@@ -308,43 +320,53 @@ def main(search_keyword: str, headlsee=True) -> list:
             # 질문 응답
             qna_results = []
             try:
-                page.locator('//span[text()="질문 더보기"]').click()  # headless 에서는 적용이 안된다...
-                page.wait_for_timeout(1000)
+                if page.locator('//span[text()="질문 더보기"]').count() > 0:
+                    page.locator('//span[text()="질문 더보기"]').click()  # headless 에서는 적용이 안된다...
+                    page.wait_for_timeout(1000)
 
-                iframe = page.frame_locator('iframe.rvN3ke')
-                iframe.locator('div[jscontroller="s2Fp0c"]').wait_for()  # 내부 요소가 보일 때까지 대기
+                    iframe = page.frame_locator('iframe.rvN3ke')
+                    if iframe.locator('div[jscontroller="s2Fp0c"]').count() > 0:
 
-                # iframe 내부에서 작업 계속 진행
-                qna_list_div = iframe.locator('div[jscontroller="s2Fp0c"] > div').all()
-                print('qna 목록 수 : ' + str(len(qna_list_div)))
+                        # iframe 내부에서 작업 계속 진행
+                        qna_list_div = iframe.locator('div[jscontroller="s2Fp0c"] > div').all()
+                        print('qna 목록 수 : ' + str(len(qna_list_div)))
 
-                for qna_div in qna_list_div:
-                    question = qna_div.locator('div.NXtIPd').nth(0).inner_text().strip()
+                        for qna_div in qna_list_div:
+                            question = qna_div.locator('div.NXtIPd').nth(0).inner_text().strip()
 
-                    # 뉴라인 분리 적용
-                    qna_results_cleaned = split_translation(question)
+                            # 뉴라인 분리 적용
+                            qna_results_cleaned = split_translation(question)
 
-                    answers_divs = qna_div.locator('div.V4O16c').all()
-                    answers = []
-                    for answer_div in answers_divs:
-                        answer = answer_div.inner_text().strip()
-                        answer_cleaned = split_translation(answer)
-                        answers.append(answer_cleaned)
+                            answers_divs = qna_div.locator('div.V4O16c').all()
+                            answers = []
+                            for answer_div in answers_divs:
+                                answer = answer_div.inner_text().strip()
+                                answer_cleaned = split_translation(answer)
+                                answers.append(answer_cleaned)
 
-                    qna_results.append({'question': qna_results_cleaned, 'answers': answers})
-
+                            qna_results.append({'question': qna_results_cleaned, 'answers': answers})
+                        print("qna 완")
+                        page.wait_for_timeout(1000)
+                    iframe.locator('button[data-tooltip-id="tt-i2"]').click()
             except Exception as e:
-                print("!!", e)
+                print("!! qna err ", e)
+                # iframe.locator('button[data-tooltip-id="tt-i2"]').click()
 
-            listing.click()
-            page.wait_for_timeout(500)
+            # listing.click()
+            # page.wait_for_timeout(500)
+            # page.locator('button[data-tooltip-id="tt-i2"]').click()
+            page.wait_for_timeout(1500)
 
             # get review list
             review_results = []
+            review_err = False
             if review_count:
                 try:
                     # page.reload()
+                    page.wait_for_selector(xpath_props['review_btn_xpath_accom'])
+                    page.wait_for_timeout(500)
                     page.locator(xpath_props['review_btn_xpath_accom']).click()
+                    page.wait_for_timeout(2000)
                     page.wait_for_selector(xpath_props['data_review_part_xpath'])
 
                     # 초기화
@@ -390,98 +412,101 @@ def main(search_keyword: str, headlsee=True) -> list:
                 except Exception as e:
                     print("!! 리뷰 데이터 가져오는 중 오류 발생")
                     print(e)
+                    review_err = True
 
                 print('리뷰 데이터 파싱..')
-                for r_idx, review_raw in enumerate(total_review_listings):
-                    review_name = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.d4r55").inner_text().strip()
-                    # print("review_name: ", review_name)
+                if not review_err:
+                    for r_idx, review_raw in enumerate(total_review_listings):
+                        review_name = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.d4r55").inner_text().strip()
+                        # print("review_name: " + review_name)
 
-                    # 리뷰어 정보 없을 수 있음
-                    if review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.RfnDt").count() > 0:
-                        review_info = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.RfnDt").inner_text().strip()
-                    else:
-                        review_info = None
+                        # 리뷰어 정보 없을 수 있음
+                        if review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.RfnDt").count() > 0:
+                            review_info = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.RfnDt").inner_text().strip()
+                        else:
+                            review_info = None
 
-                    # 리뷰 내용이 없을 수 있음
-                    if review_raw.locator(".jJc9Ad .GHT2ce .MyEned span.wiI7pd").count() > 0:
-                        review_content = review_raw.locator(
-                            ".jJc9Ad .GHT2ce .MyEned span.wiI7pd").inner_text().strip().replace('\n', ' ')
-                    else:
-                        review_content = None
+                        # 리뷰 내용이 없을 수 있음
+                        if review_raw.locator(".jJc9Ad .GHT2ce .MyEned span.wiI7pd").count() > 0:
+                            review_content = review_raw.locator(
+                                ".jJc9Ad .GHT2ce .MyEned span.wiI7pd").inner_text().strip().replace('\n', ' ')
+                        else:
+                            review_content = None
 
-                    # 리뷰 별
-                    review_rate = review_raw.locator(".jJc9Ad .fzvQIb").inner_text().strip()
+                        # 리뷰 별
+                        review_rate = review_raw.locator(".jJc9Ad .fzvQIb").inner_text().strip()
 
-                    # 리뷰 작성후 지난 시간
-                    review_at = review_raw.locator(".jJc9Ad .xRkPPb").text_content().strip()
+                        # 리뷰 작성후 지난 시간
+                        review_at = review_raw.locator(".jJc9Ad .xRkPPb").text_content().strip()
 
-                    review_image_urls = []
-                    if review_raw.locator(".jJc9Ad .GHT2ce .KtCyie").count() > 0:
-                        url_img_buttons = review_raw.locator(".jJc9Ad .GHT2ce .KtCyie button").all()
-                        if url_img_buttons:
-                            for url_img in url_img_buttons:
-                                style_attribute = url_img.get_attribute("style")
-                                url_match = re.search(r'url\("?(.*?)"?\)', style_attribute)
-                                if url_match:
-                                    review_image_urls.append({"url": url_match.group(1)})
+                        review_image_urls = []
+                        if review_raw.locator(".jJc9Ad .GHT2ce .KtCyie").count() > 0:
+                            url_img_buttons = review_raw.locator(".jJc9Ad .GHT2ce .KtCyie button").all()
+                            if url_img_buttons:
+                                for url_img in url_img_buttons:
+                                    style_attribute = url_img.get_attribute("style")
+                                    url_match = re.search(r'url\("?(.*?)"?\)', style_attribute)
+                                    if url_match:
+                                        review_image_urls.append({"url": url_match.group(1)})
 
-                    # images 파일로 다운로드
-                    print("downloading images...")
-                    if len(review_image_urls) > 0:
-                        image_dir = os.path.join('../output/images', str(list_idx))
-                        os.makedirs(image_dir, exist_ok=True)
-                        for i, image_url in enumerate(review_image_urls):
-                            try:
-                                image_url = image_url['url']
-                                if image_url.startswith('//'):
-                                    image_url = 'https:' + image_url
+                        # images 파일로 다운로드
+                        print("downloading images...")
+                        if len(review_image_urls) > 0:
+                            image_dir = os.path.join('../output/images', str(list_idx))
+                            os.makedirs(image_dir, exist_ok=True)
+                            for i, image_url in enumerate(review_image_urls):
+                                try:
+                                    image_url = image_url['url']
+                                    if image_url.startswith('//'):
+                                        image_url = 'https:' + image_url
 
-                                # 이미지 파일 이름 정리
-                                image_name = convert_url_to_safe_file_name(image_url)
+                                    # 이미지 파일 이름 정리
+                                    image_name = convert_url_to_safe_file_name(image_url)
 
-                                image_folder_path = os.path.join(image_dir, str(r_idx))
-                                if not os.path.exists(image_folder_path):
-                                    os.makedirs(image_folder_path)
-                                image_path = os.path.join(image_dir, str(r_idx), image_name)
+                                    image_folder_path = os.path.join(image_dir, str(r_idx))
+                                    if not os.path.exists(image_folder_path):
+                                        os.makedirs(image_folder_path)
+                                    image_path = os.path.join(image_dir, str(r_idx), image_name)
 
-                                # 파일이 이미 존재하는지 확인
-                                if not os.path.exists(image_path):
-                                    print(f"Downloading image: {image_name}")
+                                    # 파일이 이미 존재하는지 확인
+                                    if not os.path.exists(image_path):
+                                        print(f"Downloading image: {image_name}")
 
-                                    # 이미지 다운로드
-                                    response = requests.get(image_url, stream=True)
-                                    response.raise_for_status()  # 요청이 성공하지 않으면 에러 발생
+                                        # 이미지 다운로드
+                                        response = requests.get(image_url, stream=True)
+                                        response.raise_for_status()  # 요청이 성공하지 않으면 에러 발생
 
-                                    # 이미지 파일로 저장
-                                    with open(image_path, 'wb') as file:
-                                        for chunk in response.iter_content(1024):  # 파일을 잘게 나눠서 저장
-                                            file.write(chunk)
+                                        # 이미지 파일로 저장
+                                        with open(image_path, 'wb') as file:
+                                            for chunk in response.iter_content(1024):  # 파일을 잘게 나눠서 저장
+                                                file.write(chunk)
 
-                                    print(f"Image saved: {image_path}")
+                                        print(f"Image saved: {image_path}")
 
-                                else:
-                                    print(f"Image already exists: {image_path}")
+                                    else:
+                                        print(f"Image already exists: {image_path}")
 
-                                review_image_urls[i]['path'] = os.path.join(str(list_idx), str(r_idx), image_name)
+                                    review_image_urls[i]['path'] = os.path.join(str(list_idx), str(r_idx), image_name)
 
-                            except Exception as e:
-                                print(f"!! Failed to download {image_url}: {e}")
+                                except Exception as e:
+                                    print(f"!! Failed to download {image_url}: {e}")
 
-                    review_results.append({
-                        "review_idx": r_idx,
-                        "review_name": review_name,
-                        "review_info": review_info,
-                        "review_content": review_content,
-                        "review_rate": review_rate,
-                        "review_image_urls": review_image_urls,
-                        'review_at': review_at
-                    })
+                        review_results.append({
+                            "review_idx": r_idx,
+                            "review_name": review_name,
+                            "review_info": review_info,
+                            "review_content": review_content,
+                            "review_rate": review_rate,
+                            "review_image_urls": review_image_urls,
+                            'review_at': review_at
+                        })
 
             # 정보
             print('정보 데이터 파싱..')
             infos = []
             try:
                 page.locator('//button[@role="tab"][4]').click()
+                page.wait_for_timeout(1500)
                 page.wait_for_selector('div.QoXOEc.fontBodySmall')
 
                 role_divs = page.locator('div.QoXOEc.fontBodySmall  div[role="img"]').all()
@@ -514,25 +539,42 @@ def main(search_keyword: str, headlsee=True) -> list:
                 'website': website,
                 'phone': phone,
                 'reviews': review_results,
-                'scraped_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                'scraped_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'search_keyword': search_keyword,
             }
 
-            data_results.append(parse_result)
+            end_time = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+            elapsed_time = time.time() - list_start_time
+
+            print(
+                f"############### end list : {str(list_idx)}, end_time: {end_time}, elapsed_time: {elapsed_time:.2f} sec  ###############")
+
+            # data_results.append(parse_result)
             # print("parse_result: ", parse_result)
+            json_data = json.dumps(parse_result, ensure_ascii=False, indent=4)
+            try:
+                with open(f'../output/json/output_{str(list_idx)}_{name}.json', 'w', encoding='utf-8') as f:
+                    f.write(json_data)
+
+            except Exception as e:
+                print(f"!! Error writing to file : {e}")
+
 
         print("Finished processing and scraping data.")
 
         context.close()
         browser.close()
-        return data_utils.remove_duplicate_list(data_results)
+        # return data_utils.remove_duplicate_list(data_results)
 
 
 if __name__ == "__main__":
 
     search_keywords: list[str] = ["양곤 호텔", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ",
-                                  "コインランドリー"]
+                                  "コインランドリー", "ရန်ကုန် Hotel", "မန္တလေး Hotel", "နေပြည်တော် Hotel"]
 
-    search_keyword = search_keywords[0]
+
+
+    search_keyword = search_keywords[5]
 
     start_time = time.time()
     formatted_time = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
@@ -540,20 +582,22 @@ if __name__ == "__main__":
     print(
         f" ############### keyword: {search_keyword}, start_time: {formatted_time} ###############")
 
-    data_results = main(search_keyword, False)  # 질문 답변 파트에서 headless 적용이 안됨 iframe 때문일듯
-    json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
+    # data_results = main(search_keyword, False)  # 질문 답변 파트에서 headless 적용이 안됨 iframe 때문일듯
+    main(search_keyword, False)
+    # json_data = json.dumps(data_results, ensure_ascii=False, indent=4)
     # Save the scraped result data as a JSON file in the output directory.
-    try:
-        with open(f'../output/output_{search_keyword}.json', 'w', encoding='utf-8') as f:
-            f.write(json_data)
-
-    except Exception as e:
-        print(f"!! Error writing to file : {e}")
+    # try:
+    #     with open(f'../output/output_{search_keyword}.json', 'w', encoding='utf-8') as f:
+    #         f.write(json_data)
+    #
+    # except Exception as e:
+    #     print(f"!! Error writing to file : {e}")
 
     end_time = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
     elapsed_time = time.time() - start_time
 
     print(
         f"############### end keyword : {search_keyword}, end_time: {end_time}, elapsed_time: {elapsed_time:.2f} sec  ###############")
+
 
     print("end process")
