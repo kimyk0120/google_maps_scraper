@@ -585,7 +585,7 @@ if __name__ == "__main__":
 
 
 
-    search_keyword = search_keywords[6]
+    search_keyword = search_keywords[7]
 
     start_time = time.time()
     formatted_time = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
