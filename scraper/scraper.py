@@ -1,9 +1,11 @@
 # from playwright.async_api import async_playwright
 import configparser
+import hashlib
 import os
 import re
 import time
 from datetime import datetime
+import requests
 
 from playwright.sync_api import sync_playwright
 from utils import data_utils, string_utils
@@ -25,6 +27,29 @@ proxy_props = config['PROXY']
 chromium_path = path_props['chromium_path']
 
 
+def convert_url_to_safe_file_name(url, extension=".jpg"):
+    # Hash the URL using MD5 to create a unique, safe file name.
+    hashed_name = hashlib.md5(url.encode("utf-8")).hexdigest()
+    return f"{hashed_name}{extension}"
+
+
+def split_translation(data):
+    # 연속된 줄바꿈을 하나로 정리
+    cleaned_data = re.sub(r'\n+', '\n', data).strip()
+
+    # "(Google 번역)"과 "(원본)"을 기준으로 나눔
+    parts = re.split(r'\((Google 번역|원본)\)', cleaned_data)
+
+    # 결과 배열 생성
+    result = []
+    for i in range(1, len(parts), 2):  # 홀수 인덱스 = (Google 번역), (원본)
+        label = parts[i]  # 라벨: Google 번역 또는 원본
+        text = parts[i + 1].strip()  # 라벨에 해당하는 텍스트
+        result.append(f"({label}) {text}")
+
+    return result
+
+
 # scrape 시작
 def main(search_keyword: str, headlsee=True) -> list:
     with sync_playwright() as p:
@@ -38,7 +63,6 @@ def main(search_keyword: str, headlsee=True) -> list:
         # chromium_path가 있는 경우에만 launch_options에 추가
         if chromium_path:
             launch_options["executable_path"] = chromium_path
-
 
         # proxy 설정 추가
         if proxy_props['proxy_server']:  # proxy_server가 비어 있지 않다면
@@ -293,7 +317,7 @@ def main(search_keyword: str, headlsee=True) -> list:
                     print("리뷰 데이터 가져오는 중 오류 발생")
                     print(e)
 
-                for review_raw in total_review_listings:
+                for r_idx, review_raw in enumerate(total_review_listings):
                     review_name = review_raw.locator(".jJc9Ad .GHT2ce.NsCY4 div.d4r55").inner_text().strip()
                     print("review_name: ", review_name)
 
@@ -318,6 +342,9 @@ def main(search_keyword: str, headlsee=True) -> list:
 
                     review_image_urls = []
                     if review_raw.locator(".jJc9Ad .GHT2ce .KtCyie").count() > 0:
+                        if review_raw.locator(".jJc9Ad .GHT2ce .KtCyie .Tap5If").count() > 0:
+                            review_raw.locator(".jJc9Ad .GHT2ce .KtCyie .Tap5If").click()
+                            page.wait_for_timeout(1000)
                         url_img_buttons = review_raw.locator(".jJc9Ad .GHT2ce .KtCyie button").all()
                         if url_img_buttons:
                             for url_img in url_img_buttons:
@@ -325,6 +352,48 @@ def main(search_keyword: str, headlsee=True) -> list:
                                 url_match = re.search(r'url\("?(.*?)"?\)', style_attribute)
                                 if url_match:
                                     review_image_urls.append(url_match.group(1))
+
+                    # images 파일로 다운로드
+                    # print("downloading images...")
+                    # if len(review_image_urls) > 0:
+                    #     image_dir = os.path.join('../output/images', name)
+                    #     os.makedirs(image_dir, exist_ok=True)
+                    #     for i, image_url in enumerate(review_image_urls):
+                    #         try:
+                    #             image_url = image_url['url']
+                    #             if image_url.startswith('//'):
+                    #                 image_url = 'https:' + image_url
+                    #
+                    #             # 이미지 파일 이름 정리
+                    #             image_name = convert_url_to_safe_file_name(image_url)
+                    #
+                    #             image_folder_path = os.path.join(image_dir, str(r_idx))
+                    #             if not os.path.exists(image_folder_path):
+                    #                 os.makedirs(image_folder_path)
+                    #             image_path = os.path.join(image_dir, str(r_idx), image_name)
+                    #
+                    #             # 파일이 이미 존재하는지 확인
+                    #             if not os.path.exists(image_path):
+                    #                 print(f"Downloading image: {image_name}")
+                    #
+                    #                 # 이미지 다운로드
+                    #                 response = requests.get(image_url, stream=True)
+                    #                 response.raise_for_status()  # 요청이 성공하지 않으면 에러 발생
+                    #
+                    #                 # 이미지 파일로 저장
+                    #                 with open(image_path, 'wb') as file:
+                    #                     for chunk in response.iter_content(1024):  # 파일을 잘게 나눠서 저장
+                    #                         file.write(chunk)
+                    #
+                    #                 print(f"Image saved: {image_path}")
+                    #
+                    #             else:
+                    #                 print(f"Image already exists: {image_path}")
+                    #
+                    #             review_image_urls[i]['path'] = os.path.join(name, str(r_idx), image_name)
+                    #
+                    #         except Exception as e:
+                    #             print(f"!! Failed to download {image_url}: {e}")
 
                     review_results.append({
                         "review_name": review_name,
@@ -360,7 +429,8 @@ def main(search_keyword: str, headlsee=True) -> list:
 
 
 if __name__ == "__main__":
-    search_keywords: list[str] = ["대야미역", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ", "コインランドリー"]
+    search_keywords: list[str] = ["대야미역", "호계동 헬스", "Turkish Restaurants in Toronto Canada", "コインランドリ",
+                                  "コインランドリー"]
 
     data_results = main(search_keywords[1], False)
     json_data = json.dumps(data_results, ensure_ascii=False, indent=4)

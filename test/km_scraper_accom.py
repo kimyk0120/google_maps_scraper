@@ -449,6 +449,9 @@ def main(search_keyword: str, headlsee=True) -> list:
 
                         review_image_urls = []
                         if review_raw.locator(".jJc9Ad .GHT2ce .KtCyie").count() > 0:
+                            if review_raw.locator(".jJc9Ad .GHT2ce .KtCyie .Tap5If").count() > 0:
+                                review_raw.locator(".jJc9Ad .GHT2ce .KtCyie .Tap5If").click()
+                                page.wait_for_timeout(1000)
                             url_img_buttons = review_raw.locator(".jJc9Ad .GHT2ce .KtCyie button").all()
                             if url_img_buttons:
                                 for url_img in url_img_buttons:
