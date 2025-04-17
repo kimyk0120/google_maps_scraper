@@ -163,5 +163,4 @@ cython_debug/
 
 
 .idea/
-/test/cw_kr.xlsx
-/output/result/
+/output/result_*/
