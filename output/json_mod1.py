@@ -34,7 +34,7 @@ def process_and_sort_prices(json_data_list):
         raise ValueError(f"Invalid price format: {price_txt}")
 
 
-json_ori = 'output.json'
+json_ori = 'output_total.json'
 with open(json_ori, 'r', encoding='utf-8') as f:
     json_data_list = json.load(f)
 
@@ -63,7 +63,7 @@ with open(json_ori, 'r', encoding='utf-8') as f:
         json_data['price_infos'] = processed_data_sorted
 
     # json 파일로 쓰기
-    with open('./output_v3.json', 'w', encoding='utf-8') as f:
+    with open('./output_total_250417.json', 'w', encoding='utf-8') as f:
         json.dump(json_data_list, f, ensure_ascii=False, indent=4)
 
 print("fin")

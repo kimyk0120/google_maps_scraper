@@ -4,7 +4,7 @@ import glob
 import json
 
 # JSON 파일 경로 패턴
-json_filse_paths = ["./result/*/json/*.json"]
+json_filse_paths = ["./result_250417/json/*.json"]
 
 json_files = []
 
@@ -19,7 +19,7 @@ for json_file in json_files:
         raw_json_data_list.append(json.load(f))
 
 # json 파일로 쓰기
-with open('./output.json', 'w', encoding='utf-8') as f:
+with open('./output_total.json', 'w', encoding='utf-8') as f:
     json.dump(raw_json_data_list, f, ensure_ascii=False, indent=4)
 
 
