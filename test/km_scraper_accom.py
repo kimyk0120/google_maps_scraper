@@ -461,8 +461,8 @@ def main(search_keyword: str, headlsee=True) -> list:
                                         review_image_urls.append({"url": url_match.group(1)})
 
                         # images 파일로 다운로드
-                        print("downloading images...")
                         if len(review_image_urls) > 0:
+                            print("downloading images...")
                             image_dir = os.path.join('../output/images', name)
                             os.makedirs(image_dir, exist_ok=True)
                             for i, image_url in enumerate(review_image_urls):
@@ -588,7 +588,7 @@ if __name__ == "__main__":
 
 
 
-    search_keyword = search_keywords[7]
+    search_keyword = search_keywords[5]
 
     start_time = time.time()
     formatted_time = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
