@@ -1,6 +1,5 @@
 # json 파일의 객체들을 한 json 파일로 모은다.
 
-import glob
 import json
 import re
 
